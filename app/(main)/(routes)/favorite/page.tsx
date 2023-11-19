@@ -1,11 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import FoodCard from '@/components/food-card';
 import useAuthModal from '@/hooks/use-auth-modal';
 import useFavorite from '@/hooks/use-favorite';
 import { useUser } from '@/hooks/use-user';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 const FavoritePage = () => {
   const { items } = useFavorite();

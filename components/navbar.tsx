@@ -53,18 +53,6 @@ const Navbar = () => {
   const { onOpen } = useAuthModal();
   const { user, userDetails } = useUser();
 
-  const handleLogout = async () => {
-    const { error } = await supabaseClient.auth.signOut();
-
-    router.refresh();
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Logged out');
-    }
-  };
-
   useEffect(() => {
     async function downloadImage() {
       try {
@@ -83,7 +71,7 @@ const Navbar = () => {
     }
 
     downloadImage();
-  }, [supabaseClient]);
+  }, [supabaseClient, setAvatarUrl]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -159,11 +147,10 @@ const Navbar = () => {
                         <DropdownMenuItem>Billing</DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={handleLogout}
-                        className="cursor-pointer"
-                      >
-                        Log out
+                      <DropdownMenuItem className="cursor-pointer">
+                        <form action="/auth/sign-out" method="post">
+                          <button type="submit">Log out</button>
+                        </form>
                         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                       </DropdownMenuItem>
                     </DropdownMenuContent>

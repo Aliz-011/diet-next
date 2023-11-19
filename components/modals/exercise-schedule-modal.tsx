@@ -3,10 +3,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { useUser } from '@/hooks/use-user';
 import useExerciseScheduleModal from '@/hooks/use-exercise-schedule-modal';
+import { createClient } from '@/utils/supabase/client';
 
 import Modal from './modal';
 import {
@@ -20,8 +22,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   reps: z.coerce
@@ -45,7 +46,9 @@ const formSchema = z.object({
 const ExerciseScheduleModal = () => {
   const { isOpen, onClose, data } = useExerciseScheduleModal();
   const { user } = useUser();
-  const supabase = useSupabaseClient();
+  const supabase = createClient();
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,6 +73,7 @@ const ExerciseScheduleModal = () => {
       if (error) throw error;
 
       toast.success('Success add to your plan');
+      router.refresh();
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -132,7 +136,7 @@ const ExerciseScheduleModal = () => {
             />
           </div>
           <Button disabled={isLoading} type="submit">
-            Add to schedule
+            Add to plan
           </Button>
         </form>
       </Form>

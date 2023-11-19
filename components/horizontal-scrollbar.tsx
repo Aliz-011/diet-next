@@ -3,9 +3,8 @@
 import Link from 'next/link';
 import { LiaDumbbellSolid } from 'react-icons/lia';
 
-import { muscleGroups } from '@/utils/data';
+import { bodyParts } from '@/utils/data';
 import Heading from './heading';
-import { useRouter } from 'next/navigation';
 
 const HorizontalScrollbar = () => {
   return (
@@ -15,10 +14,10 @@ const HorizontalScrollbar = () => {
         subtitle="Search your exercise based on muscle group"
       />
       <div className="flex w-full items-start gap-8 overflow-x-auto bg-background py-5 scrollbar-thin scrollbar-thumb-input scrollbar-track-rounded-full scrollbar-thumb-rounded-full">
-        {muscleGroups.map((item) => (
+        {bodyParts.map((item) => (
           <Link
             key={item}
-            href={`/muscle-group/${item}`}
+            href={`/${item}`}
             className="flex shrink-0 flex-col items-center justify-center gap-2 w-[180px] max-w-[180px] h-[130px] max-h-[130px] rounded px-2 py-5 bg-gray-100 dark:bg-slate-800"
           >
             <LiaDumbbellSolid className="h-10 w-10 text-red-500" />

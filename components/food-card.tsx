@@ -13,6 +13,7 @@ import useDietScheduleModal from '@/hooks/use-diet-schedule-modal';
 
 import { Food } from '@/types';
 import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
 const FoodCard = ({ data }: { data: Food }) => {
   const previewModal = usePreviewModal();
@@ -108,17 +109,17 @@ const FoodCard = ({ data }: { data: Food }) => {
               >
                 <AiOutlineHeart
                   size={20}
-                  className={
+                  className={cn(
                     isFavorite
                       ? 'text-rose-500 absolute'
                       : 'text-gray-400 absolute'
-                  }
+                  )}
                 />
                 <AiFillHeart
                   size={18}
-                  className={
+                  className={cn(
                     isFavorite ? 'text-rose-500' : 'fill-neutral-500/70'
-                  }
+                  )}
                 />
               </button>
             </div>

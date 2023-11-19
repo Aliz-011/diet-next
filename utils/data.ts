@@ -13,7 +13,7 @@ export const bodyParts = [
   'waist',
 ];
 
-export const muscleGroups = [
+export const targets = [
   'abductors',
   'abs',
   'adductors',

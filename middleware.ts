@@ -8,6 +8,18 @@ export async function middleware(req: NextRequest) {
     res,
   });
 
-  await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // if user is not signed in and the current path is not / redirect the user to /
+  if (!session?.user && req.nextUrl.pathname !== '/') {
+    return NextResponse.redirect(new URL('/', req.url));
+  }
+
   return res;
 }
+
+export const config = {
+  matcher: ['/'],
+};

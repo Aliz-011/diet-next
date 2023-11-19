@@ -9,12 +9,18 @@ export interface UserDetails {
 
 export type ExerciseSchedule = {
   id: string;
-  name: string;
-  reps: number;
-  sets: number;
-  target: string;
-  bodyPart: string;
-  equipment: string;
+  user_id: string;
+  diet_type: string;
+  status: string;
+  diet_schedules: {
+    name: string;
+    reps: number;
+    sets: number;
+    target: string;
+    bodyPart: string;
+    equipment: string;
+  };
+  created_at: string;
 };
 
 export type Exercises = {

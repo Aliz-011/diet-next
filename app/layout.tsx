@@ -29,8 +29,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={fontSans.className}>
-        <ConfettiProvider />
-        <ToasterProvider />
         <SupabaseProvider>
           <UserProvider>
             <ThemeProvider
@@ -39,6 +37,8 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
+              <ConfettiProvider />
+              <ToasterProvider />
               <ModalProvider />
               <Navbar />
               <div>{children}</div>

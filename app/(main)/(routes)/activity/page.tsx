@@ -1,5 +1,5 @@
 const ActivityPage = () => {
-  return <div>ActivityPage</div>;
+  return <div>poghgngcg</div>;
 };
 
 export default ActivityPage;

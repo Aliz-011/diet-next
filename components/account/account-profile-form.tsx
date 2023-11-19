@@ -17,6 +17,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useUser } from '@/hooks/use-user';
+import { createClient } from '@/utils/supabase/client';
+import { Session } from '@supabase/auth-helpers-nextjs';
 
 const formSchema = z.object({
   fullName: z.string().min(4, {
@@ -30,7 +32,9 @@ const formSchema = z.object({
 });
 
 const AccountProfileForm = () => {
-  const { userDetails } = useUser();
+  const { userDetails, user } = useUser();
+  const supabase = createClient();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

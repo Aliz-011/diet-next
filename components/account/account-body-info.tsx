@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 import { Badge } from '../ui/badge';
 import { useUser } from '@/hooks/use-user';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { createClient } from '@/utils/supabase/client';
 
 const AccountBodyInfo = () => {
   const { userDetails, user } = useUser();
-  const supabase = useSupabaseClient();
+  const supabase = createClient();
 
   const [loading, setLoading] = useState(false);
   const [weight, setWeight] = useState<number | undefined>(0);

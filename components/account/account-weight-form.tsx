@@ -15,6 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useUser } from '@/hooks/use-user';
+import { createClient } from '@/utils/supabase/client';
 
 const formSchema = z.object({
   weight: z.coerce.number().lt(30),
@@ -22,6 +23,7 @@ const formSchema = z.object({
 
 const AccountWeightForm = () => {
   const { user } = useUser();
+  const supabase = createClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
