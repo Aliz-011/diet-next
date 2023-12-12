@@ -1,4 +1,5 @@
 import Heading from '@/components/heading';
+import SkeletonCard from '@/components/skeleton-card';
 import SearchClient from './_components/client';
 
 import { Exercises } from '@/types';
@@ -18,6 +19,8 @@ async function getData(title: string): Promise<Exercises[]> {
     throw new Error('Failed to fetch data');
   }
 
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
   return response.json();
 }
 
@@ -32,6 +35,7 @@ const SearchPage = async ({ params }: { params: { title: string } }) => {
           subtitle={`List of exercises currently available.`}
         />
       </div>
+
       <SearchClient data={exercises} />
     </div>
   );

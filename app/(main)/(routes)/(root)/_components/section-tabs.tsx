@@ -3,12 +3,11 @@ import FoodCard from '@/components/food-card';
 import ExerciseCard from '@/components/exercise-card';
 import Heading from '@/components/heading';
 
+import { Exercises, Food } from '@/types';
+import { exerciseOptions } from '@/utils/rapidapi';
 import { results } from '@/utils/data';
 
-import { Exercises } from '@/types';
-import { exerciseOptions } from '@/utils/rapidapi';
-
-async function getData(): Promise<Exercises[]> {
+async function getExerciseData(): Promise<Exercises[]> {
   const response = await fetch('https://exercisedb.p.rapidapi.com/exercises', {
     ...exerciseOptions,
     cache: 'force-cache',
@@ -22,7 +21,7 @@ async function getData(): Promise<Exercises[]> {
 }
 
 const SectionTabs = async () => {
-  const exercises = await getData();
+  const exercises = await getExerciseData();
 
   return (
     <section className="space-y-2">
@@ -41,7 +40,7 @@ const SectionTabs = async () => {
             value="foods"
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8"
           >
-            {results.map((item) => (
+            {results.map((item: Food) => (
               <FoodCard key={item.id} data={item} />
             ))}
           </TabsContent>

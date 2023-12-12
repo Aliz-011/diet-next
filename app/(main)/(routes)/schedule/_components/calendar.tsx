@@ -38,7 +38,6 @@ const Calendar = () => {
         .from('schedules')
         .select('id, diet_type,diet_schedules,status,created_at')
         .eq('user_id', user?.id)
-        .eq('diet_type', 'exercise')
         .order('status', { ascending: false });
 
       if (!error) {
@@ -76,29 +75,35 @@ const Calendar = () => {
           <ScrollArea className="h-72 rounded-md border">
             <div className="p-4">
               <h4 className="mb-4 text-sm font-medium leading-none">Plans</h4>
-              {currentEvents.map((event) => (
-                <div
-                  key={event.id}
-                  className={cn(
-                    'my-2.5 rounded-sm border p-3',
-                    event.status === 'done' ? 'bg-green-100' : 'bg-red-100'
-                  )}
-                >
-                  <h3 className="capitalize font-semibold">
-                    {event.diet_schedules.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(event.created_at).toLocaleString('us-US', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}{' '}
-                    <span className="font-semibold uppercase">
-                      ({event.status})
-                    </span>
-                  </p>
-                </div>
-              ))}
+              {currentEvents.length <= 0 && (
+                <p className="text-sm font-semibold text-muted-foreground text-center">
+                  No plans yet.
+                </p>
+              )}
+              {currentEvents.length > 0 &&
+                currentEvents.map((event) => (
+                  <div
+                    key={event.id}
+                    className={cn(
+                      'my-2.5 rounded-sm border p-3',
+                      event.status === 'done' ? 'bg-green-100' : 'bg-red-100'
+                    )}
+                  >
+                    <h3 className="capitalize font-semibold">
+                      {event.diet_schedules.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(event.created_at).toLocaleString('us-US', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}{' '}
+                      <span className="font-semibold uppercase">
+                        ({event.status})
+                      </span>
+                    </p>
+                  </div>
+                ))}
             </div>
           </ScrollArea>
         </div>

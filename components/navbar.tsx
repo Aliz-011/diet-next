@@ -8,14 +8,7 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { toast } from 'react-hot-toast';
 
-import {
-  CalendarIcon,
-  EnvelopeClosedIcon,
-  FaceIcon,
-  GearIcon,
-  PersonIcon,
-  RocketIcon,
-} from '@radix-ui/react-icons';
+import { CalendarIcon, FaceIcon, RocketIcon } from '@radix-ui/react-icons';
 
 import { ModeToggle } from '@/components/mode-toggle';
 import {
@@ -37,7 +30,6 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from '@/components/ui/command';
 
 import useAuthModal from '@/hooks/use-auth-modal';
@@ -49,6 +41,7 @@ const Navbar = () => {
 
   const [open, setOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [query, setQuery] = useState('');
 
   const { onOpen } = useAuthModal();
   const { user, userDetails } = useUser();
@@ -71,7 +64,7 @@ const Navbar = () => {
     }
 
     downloadImage();
-  }, [supabaseClient, setAvatarUrl]);
+  }, [supabaseClient, setAvatarUrl, userDetails]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -88,7 +81,7 @@ const Navbar = () => {
   return (
     <header className="z-20 border-b">
       <nav>
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-4 px-4 sm:px-0">
+        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-4 px-4 md:px-0">
           <Link href="/" className="hidden sm:flex sm:items-center">
             <span className="self-center text-xl font-bold whitespace-nowrap dark:text-white">
               DIGEST
@@ -99,8 +92,8 @@ const Navbar = () => {
             <FaReact size={24} />
           </Link>
 
-          <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-            <ul className="font-medium flex flex-col w-full items-center p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-4 md:mt-0 md:border-0 dark:border-gray-700">
+          <div>
+            <ul className="font-medium flex w-full items-center gap-x-4 md:p-0 md:gap-x-4 md:mt-0 md:border-0 dark:border-gray-700">
               <li>
                 <button
                   onClick={() => setOpen((prev) => !prev)}
@@ -115,7 +108,7 @@ const Navbar = () => {
                   </kbd>
                 </button>
               </li>
-              <li>
+              <li className="hidden md:inline">
                 <ModeToggle />
               </li>
               <li>
@@ -176,7 +169,11 @@ const Navbar = () => {
       </nav>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput
+          value={query}
+          onValueChange={(s) => setQuery(s)}
+          placeholder="Type a command or search..."
+        />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
@@ -191,24 +188,6 @@ const Navbar = () => {
             <CommandItem>
               <RocketIcon className="mr-2 h-4 w-4" />
               <span>Launch</span>
-            </CommandItem>
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Settings">
-            <CommandItem onSelect={() => toast('profile clicked')}>
-              <PersonIcon className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <EnvelopeClosedIcon className="mr-2 h-4 w-4" />
-              <span>Mail</span>
-              <CommandShortcut>⌘B</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <GearIcon className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-              <CommandShortcut>⌘S</CommandShortcut>
             </CommandItem>
           </CommandGroup>
         </CommandList>

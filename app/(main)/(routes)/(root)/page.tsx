@@ -20,8 +20,7 @@ const SetupPage = async () => {
   const { data } = await supabase
     .from('schedules')
     .select('id, diet_type,diet_schedules,status,created_at')
-    .eq('user_id', session?.user.id)
-    .eq('diet_type', 'exercise');
+    .eq('user_id', session?.user.id);
 
   const formattedSchedules: SchedulesColumn[] = data?.map((item) => ({
     id: item.id,

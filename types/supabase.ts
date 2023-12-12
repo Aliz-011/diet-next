@@ -13,18 +13,21 @@ export interface Database {
         Row: {
           created_at: string
           id: string
+          intensity: string
           user_id: string
           weight: number
         }
         Insert: {
           created_at?: string
           id?: string
+          intensity: string
           user_id: string
           weight: number
         }
         Update: {
           created_at?: string
           id?: string
+          intensity?: string
           user_id?: string
           weight?: number
         }
@@ -32,6 +35,7 @@ export interface Database {
           {
             foreignKeyName: "antropemetri_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
@@ -69,6 +73,7 @@ export interface Database {
           {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -103,6 +108,7 @@ export interface Database {
           {
             foreignKeyName: "schedules_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           }

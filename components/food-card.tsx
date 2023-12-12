@@ -90,7 +90,7 @@ const FoodCard = ({ data }: { data: Food }) => {
               group-hover:scale-110 
               transition
             "
-            src={data.image}
+            src={data?.image}
             alt="Listing"
             sizes="20"
           />
@@ -126,12 +126,12 @@ const FoodCard = ({ data }: { data: Food }) => {
           </div>
         </div>
 
-        <div className="font-semibold text-lg line-clamp-1">{data.title}</div>
+        <div className="font-semibold text-lg line-clamp-1">{data?.title}</div>
         <div className="font-light text-neutral-500">
-          {data.servings} {data.servings > 1 ? 'servings' : 'serving'}
+          {data?.servings} {data?.servings > 1 ? 'servings' : 'serving'}
         </div>
         <div className="flex flex-row items-center gap-1">
-          <div className="font-semibold">${data.pricePerServing}</div>
+          <div className="font-semibold">${data?.pricePerServing}</div>
         </div>
 
         <Button onClick={addToSchedule}>Add to Schedule</Button>

@@ -30,16 +30,16 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { CalendarIcon } from '@radix-ui/react-icons';
+import { Calendar } from '../ui/calendar';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 
 const formSchema = z.object({
-  serving: z.coerce
-    .number({
-      required_error: 'Serving is required',
-    })
-    .positive()
-    .gte(1, {
-      message: 'Serving should be greater than 0.',
-    }),
+  dte: z.date({
+    required_error: 'A date of birth is required.',
+  }),
   time: z.enum(['breakfast', 'lunch', 'dinner'], {
     required_error: 'You need to select a time for meal.',
   }),
@@ -55,9 +55,6 @@ const DietScheduleModal = () => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      serving: 1,
-    },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -128,7 +125,7 @@ const DietScheduleModal = () => {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Choose a time for your meal.
+                    Choose a time for this meal.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -136,20 +133,42 @@ const DietScheduleModal = () => {
             />
             <FormField
               control={form.control}
-              name="serving"
+              name="dte"
               render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Serving</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Serving per meal e.g 1"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Serving you want for each meals.
-                  </FormDescription>
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date to eat</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'w-[240px] pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'PPP')
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date('1900-01-01')
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>Date you want to eat.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

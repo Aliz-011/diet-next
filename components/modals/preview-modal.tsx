@@ -46,8 +46,8 @@ const PreviewModal = () => {
             <div className="aspect-square w-full">
               <div className="aspect-square relative h-full w-full sm:rounded-lg overflow-hidden">
                 <Image
-                  src={data.image}
-                  alt={data.title + data.imageType}
+                  src={data?.image}
+                  alt={data?.title + data?.imageType}
                   fill
                   className="object-cover object-center"
                 />
@@ -59,18 +59,17 @@ const PreviewModal = () => {
         <div className="sm:col-span-8 lg:col-span-7">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-200">
-              {data.title}
+              {data?.title}
             </h1>
             <div className="mt-3 flex items-end justify-between">
               <p className=" text-gray-500 font-medium">
-                {data.servings} serving(s)
+                {data?.servings} serving(s)
               </p>
             </div>
             <div className="mt-3 flex items-end justify-between">
               <p className=" text-gray-500 font-medium">
-                {data.nutrition.weightPerServing.amount}
-                {data.nutrition.weightPerServing.unit}
-                <span className="text-sm font-light">/serving</span>
+                {data?.nutrition?.nutrients[0]?.amount!}
+                <span className="text-sm font-light">kcal</span>
               </p>
             </div>
             <hr className="my-4" />
@@ -78,7 +77,7 @@ const PreviewModal = () => {
               <div className="flex flex-col gap-y-2">
                 <h3 className="font-semibold text-black">Diet types:</h3>
                 <ul className="grid grid-cols-2 gap-y-1 gap-x-2 list-disc pl-4">
-                  {data.diets.map((item) => (
+                  {data?.diets?.map((item) => (
                     <li key={item}>
                       <p className="capitalize">{item}</p>
                     </li>

@@ -17,23 +17,37 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useUser } from '@/hooks/use-user';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+
 import { createClient } from '@/utils/supabase/client';
-import { Session } from '@supabase/auth-helpers-nextjs';
 
 const formSchema = z.object({
   fullName: z.string().min(4, {
     message: 'Full name must be at least 4 characters.',
   }),
-  age: z.number().gte(16, {
-    message: 'You should be at least 16 years old to use this app.',
-  }),
-  height: z.number(),
+  age: z
+    .number()
+    .gte(16, {
+      message: 'You should be at least 16 years old to use this app.',
+    })
+    .int(),
+  height: z
+    .number()
+    .gte(140, {
+      message: 'Your height is too short!',
+    })
+    .int(),
   sex: z.enum(['Male', 'Female']),
 });
 
 const AccountProfileForm = () => {
-  const { userDetails, user } = useUser();
+  const { userDetails } = useUser();
   const supabase = createClient();
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,8 +58,27 @@ const AccountProfileForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: values.fullName,
+          age: values.age,
+          height: values.height,
+          sex: values.sex,
+        })
+        .eq('id', userDetails?.id);
+
+      if (error) throw error;
+      router.push('/');
+      toast.success('Success updating your profile');
+    } catch (error) {
+      toast.error('Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <section className="my-10 border p-6 rounded-lg">
@@ -71,7 +104,11 @@ const AccountProfileForm = () => {
                     <FormItem>
                       <FormLabel>Full Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g Alianz Andy" {...field} />
+                        <Input
+                          placeholder="e.g Alianz Andy"
+                          disabled={isLoading}
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription>
                         This is your public display name.
@@ -90,7 +127,12 @@ const AccountProfileForm = () => {
                     <FormItem>
                       <FormLabel>Age</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g 17" type="number" {...field} />
+                        <Input
+                          placeholder="e.g 17"
+                          type="number"
+                          disabled={isLoading}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -104,7 +146,12 @@ const AccountProfileForm = () => {
                     <FormItem>
                       <FormLabel>Height (cm)</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g 170" type="number" {...field} />
+                        <Input
+                          placeholder="e.g 170"
+                          type="number"
+                          disabled={isLoading}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -147,7 +194,9 @@ const AccountProfileForm = () => {
               </div>
 
               <div className="mt-6 flex items-center justify-end gap-x-6 col-span-full">
-                <Button type="submit">Save Changes</Button>
+                <Button type="submit" disabled={isLoading}>
+                  Save Changes
+                </Button>
               </div>
             </div>
           </div>

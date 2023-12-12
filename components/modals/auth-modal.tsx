@@ -53,7 +53,7 @@ const AuthModal = () => {
             },
           },
         }}
-        redirectTo="http://localhost:3000/auth/callback"
+        redirectTo={`${location.origin}/auth/callback`}
       />
     </Modal>
   );
