@@ -53,13 +53,11 @@ const AccountBodyInfo = () => {
       if (!error) {
         setWeight(antropometri.weight);
         setIntensity(antropometri.intensity);
-      } else {
-        console.log(error);
       }
     };
 
     fetchWeight();
-  }, [setWeight, setIntensity]);
+  }, [setWeight, setIntensity, supabase]);
 
   const idealWeight = useMemo(() => {
     if (!userDetails || !height) return 0;

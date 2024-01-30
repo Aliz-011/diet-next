@@ -1,7 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['spoonacular.com', 'fakestoreapi.com', 'v2.exercisedb.io'],
+    remotePatterns: [
+      {
+        hostname: 'spoonacular.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'v2.exercisedb.io',
+        protocol: 'https',
+      },
+    ],
   },
 };
 

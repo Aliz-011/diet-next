@@ -1,5 +1,12 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react';
+import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,22 +17,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { useUser } from '@/hooks/use-user';
-import { createClient } from '@/utils/supabase/client';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
+} from '@/components/ui/select';
+
+import { useUser } from '@/hooks/use-user';
+import { createClient } from '@/utils/supabase/client';
 
 const formSchema = z.object({
   weight: z.coerce.number().gt(30),
@@ -40,10 +41,29 @@ const AccountWeightForm = () => {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [weight, setWeight] = useState('');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    const fetchWeight = async () => {
+      const { data: antropometri, error } = await supabase
+        .from('antropemetri')
+        .select('created_at')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (!error) {
+        setWeight(antropometri.created_at);
+      }
+    };
+
+    fetchWeight();
+  }, [setWeight, supabase]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -64,6 +84,11 @@ const AccountWeightForm = () => {
       setIsLoading(false);
     }
   }
+
+  const disabled = useMemo(() => {
+    return new Date(weight).getMonth() === new Date().getMonth();
+  }, [weight]);
+
   return (
     <section className="my-10 border p-6 rounded-lg">
       <Form {...form}>
@@ -74,7 +99,8 @@ const AccountWeightForm = () => {
                 Weight
               </h2>
               <p className="mt-1 text-sm leading-6 dark:text-gray-400">
-                Update your weight to keep track of your monthly weight goal!
+                Update your weight once a month to keep track of your weight
+                goal!
               </p>
             </div>
 
@@ -89,7 +115,7 @@ const AccountWeightForm = () => {
                       <FormControl>
                         <Input
                           placeholder="e.g 52"
-                          disabled={isLoading}
+                          disabled={isLoading || disabled}
                           {...field}
                         />
                       </FormControl>
@@ -111,8 +137,8 @@ const AccountWeightForm = () => {
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select activity level" />
+                          <SelectTrigger disabled={isLoading || disabled}>
+                            <SelectValue placeholder="Select intensity level" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -130,7 +156,7 @@ const AccountWeightForm = () => {
               </div>
 
               <div className=" flex items-center justify-end gap-x-6 col-span-full">
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading || disabled}>
                   Save changes
                 </Button>
               </div>

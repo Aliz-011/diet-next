@@ -2,8 +2,7 @@
 
 import Image from 'next/image';
 import { MouseEventHandler, useEffect, useState } from 'react';
-import { LuExpand } from 'react-icons/lu';
-import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { Expand, Heart } from 'lucide-react';
 
 import usePreviewModal from '@/hooks/use-preview-modal';
 import useFavorite from '@/hooks/use-favorite';
@@ -100,14 +99,14 @@ const FoodCard = ({ data }: { data: Food }) => {
                 onClick={onPreview}
                 className="rounded-full flex items-center justify-center bg-white border shadow-md p-2 hover:scale-110 transition"
               >
-                <LuExpand size={16} className="text-gray-600" />
+                <Expand size={16} className="text-gray-600" />
               </button>
 
               <button
                 onClick={addToFavorite}
                 className="relative cursor-pointer rounded-full flex items-center justify-center bg-white border shadow-md p-2 hover:scale-110 transition"
               >
-                <AiOutlineHeart
+                <Heart
                   size={20}
                   className={cn(
                     isFavorite
@@ -115,7 +114,7 @@ const FoodCard = ({ data }: { data: Food }) => {
                       : 'text-gray-400 absolute'
                   )}
                 />
-                <AiFillHeart
+                <Heart
                   size={18}
                   className={cn(
                     isFavorite ? 'text-rose-500' : 'fill-neutral-500/70'

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { DateFormatter, DayPicker } from 'react-day-picker';
+import { DateFormatter } from 'react-day-picker';
 
 import { Calendar } from '@/components/ui/calendar';
 import Heading from './heading';

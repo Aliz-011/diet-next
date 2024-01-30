@@ -38,7 +38,7 @@ import { format } from 'date-fns';
 
 const formSchema = z.object({
   dte: z.date({
-    required_error: 'A date of birth is required.',
+    required_error: 'A date is required.',
   }),
   time: z.enum(['breakfast', 'lunch', 'dinner'], {
     required_error: 'You need to select a time for meal.',
@@ -66,6 +66,7 @@ const DietScheduleModal = () => {
         diet_schedules: {
           id: data?.id,
           name: data?.title,
+          calories: data?.nutrition.nutrients[0].amount,
           ...values,
         },
       });
@@ -73,6 +74,7 @@ const DietScheduleModal = () => {
 
       toast.success('Success add to your plan');
       router.refresh();
+      form.reset();
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -124,9 +126,6 @@ const DietScheduleModal = () => {
                       <SelectItem value="dinner">Dinner</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    Choose a time for this meal.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -161,9 +160,6 @@ const DietScheduleModal = () => {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date('1900-01-01')
-                        }
                         initialFocus
                       />
                     </PopoverContent>

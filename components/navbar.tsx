@@ -1,16 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { FaReact } from 'react-icons/fa';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { toast } from 'react-hot-toast';
+import { useCallback, useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { HelpCircle, SlidersHorizontal } from 'lucide-react';
+import { useTour } from '@reactour/tour';
 
-import { CalendarIcon, FaceIcon, RocketIcon } from '@radix-ui/react-icons';
-
-import { ModeToggle } from '@/components/mode-toggle';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,25 +18,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from '@/components/ui/command';
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
 
 import useAuthModal from '@/hooks/use-auth-modal';
 import { useUser } from '@/hooks/use-user';
+import { createClient } from '@/utils/supabase/client';
+import { useSearchModal } from '@/hooks/use-search-modal';
 
 const Navbar = () => {
-  const supabaseClient = useSupabaseClient();
+  const supabaseClient = createClient();
   const router = useRouter();
+  const pathname = usePathname();
+  const { setIsOpen } = useTour();
 
-  const [open, setOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState('');
-  const [query, setQuery] = useState('');
+  const searchModal = useSearchModal((state) => state);
 
   const { onOpen } = useAuthModal();
   const { user, userDetails } = useUser();
@@ -66,63 +62,59 @@ const Navbar = () => {
     downloadImage();
   }, [supabaseClient, setAvatarUrl, userDetails]);
 
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key == '/' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-
-        setOpen((prev) => !prev);
-      }
-    };
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
-  }, []);
+  const handleTour = useCallback(() => {
+    if (pathname !== '/') {
+      router.push('/');
+    }
+    setIsOpen(true);
+  }, [pathname, router, setIsOpen]);
 
   return (
     <header className="z-20 border-b">
       <nav>
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-4 px-4 md:px-0">
+        <div className="max-w-screen-xl flex flex-wrap items-center justify-end sm:justify-between mx-auto py-4 px-4 md:px-0">
           <Link href="/" className="hidden sm:flex sm:items-center">
             <span className="self-center text-xl font-bold whitespace-nowrap dark:text-white">
               DIGEST
             </span>
           </Link>
 
-          <Link href="/" className="flex items-center sm:hidden">
-            <FaReact size={24} />
-          </Link>
-
           <div>
             <ul className="font-medium flex w-full items-center gap-x-4 md:p-0 md:gap-x-4 md:mt-0 md:border-0 dark:border-gray-700">
               <li>
-                <button
-                  onClick={() => setOpen((prev) => !prev)}
-                  className="group py-2 px-3 rounded-md flex items-center gap-x-2 w-56 bg-zinc-700/10 hover:bg-zinc-700/20 dark:bg-zinc-700/50 transition"
-                >
-                  <HiMagnifyingGlass className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
-                  <p className="font-medium text-sm text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition">
-                    Quick search...
-                  </p>
-                  <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground ml-auto">
-                    <span className="text-xs">&#8984;</span>'/'
-                  </kbd>
-                </button>
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild className="mt-2">
+                      <button onClick={handleTour}>
+                        <HelpCircle size={18} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Guide me</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </li>
-              <li className="hidden md:inline">
-                <ModeToggle />
+              <li>
+                <Button onClick={() => searchModal.onOpen()} variant="outline">
+                  <SlidersHorizontal className="mr-2 h-4 w-4" /> Filters
+                </Button>
               </li>
               <li>
                 {user ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild className="cursor-pointer">
                       <Avatar>
-                        <AvatarImage src={avatarUrl} alt="avatar" />
+                        <AvatarImage
+                          src={
+                            avatarUrl ? avatarUrl : '/images/placeholder.jpg'
+                          }
+                          alt="avatar"
+                        />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       className="w-56"
-                      align="center"
+                      align="end"
                       side="bottom"
                     >
                       <DropdownMenuLabel>
@@ -152,11 +144,7 @@ const Navbar = () => {
                   <button onClick={() => onOpen()}>
                     <Avatar>
                       <AvatarImage
-                        src={
-                          avatarUrl
-                            ? avatarUrl
-                            : 'https://github.com/shadcn.png'
-                        }
+                        src={avatarUrl ? avatarUrl : '/images/placeholder.jpg'}
                       />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
@@ -167,31 +155,6 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput
-          value={query}
-          onValueChange={(s) => setQuery(s)}
-          placeholder="Type a command or search..."
-        />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            <CommandItem>
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              <span>Calendar</span>
-            </CommandItem>
-            <CommandItem>
-              <FaceIcon className="mr-2 h-4 w-4" />
-              <span>Search Emoji</span>
-            </CommandItem>
-            <CommandItem>
-              <RocketIcon className="mr-2 h-4 w-4" />
-              <span>Launch</span>
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
     </header>
   );
 };

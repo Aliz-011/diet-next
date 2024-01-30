@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -22,7 +23,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   reps: z.coerce
@@ -74,6 +74,7 @@ const ExerciseScheduleModal = () => {
 
       toast.success('Success add to your plan');
       router.refresh();
+      form.reset();
     } catch (error: any) {
       toast.error(error.message);
     } finally {

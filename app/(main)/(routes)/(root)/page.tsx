@@ -4,7 +4,6 @@ import { SchedulesColumn, columns } from './_components/columns';
 
 import Heading from '@/components/heading';
 import HorizontalScrollbar from '@/components/horizontal-scrollbar';
-import CaledarSchedule from '@/components/calendar-schedule';
 import { DataTable } from '@/components/table/data-table';
 
 import { createClient } from '@/utils/supabase/server';
@@ -37,15 +36,17 @@ const SetupPage = async () => {
   return (
     <div className="space-y-4">
       <Ad />
-      <CaledarSchedule />
       <SectionTabs />
       <HorizontalScrollbar />
 
       <div className="mx-auto pt-10">
-        <Heading
-          title="History"
-          subtitle="Your previous completed activity will shown here"
-        />
+        <div id="history">
+          <Heading
+            title="History"
+            subtitle="Your completed activity will be shown here"
+          />
+        </div>
+
         {data?.length! > 0 && (
           <DataTable
             data={formattedSchedules}

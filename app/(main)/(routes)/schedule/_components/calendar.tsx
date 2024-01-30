@@ -42,8 +42,6 @@ const Calendar = () => {
 
       if (!error) {
         setCurrentEvents(data);
-      } else {
-        console.log('loading...');
       }
     };
     getPlans();
@@ -131,7 +129,9 @@ const Calendar = () => {
                 .filter((event) => event.status === 'on my way')
                 .map((event) => ({
                   id: event.id,
-                  title: event.diet_schedules.name,
+                  title: event.diet_schedules.time
+                    ? `${event.diet_schedules.name} - ${event.diet_schedules.time}`
+                    : `${event.diet_schedules.name} - ${event.diet_schedules.sets} sets x ${event.diet_schedules.reps} repetitions`,
                   date: event.created_at,
                 }))}
             />

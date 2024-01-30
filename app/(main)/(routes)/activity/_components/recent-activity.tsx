@@ -1,4 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { format } from 'date-fns';
+
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface RecentActivityProps {
@@ -20,25 +21,23 @@ export function RecentActivity({
         <div className="space-y-8">
           {data &&
             data.map((item) => (
-              <div className="flex items-center" key={item.id}>
-                <Avatar className="flex h-9 w-9 items-center justify-center space-y-0 border">
-                  <AvatarImage src="/avatars/02.png" alt="Avatar" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <div className="ml-4 space-y-1">
-                  <p className="text-sm font-medium leading-none capitalize">
+              <div className="flex justify-between" key={item.id}>
+                <div className="flex flex-col space-y-1">
+                  <p className="font-medium leading-none capitalize">
                     {item.diet_schedules.name}
                   </p>
-                  <p className="text-sm text-muted-foreground uppercase">
+                  <p className="text-sm font-medium capitalize">
                     {item.diet_type}
+                    {item.diet_schedules.time ? (
+                      <span className="text-muted-foreground lowercase">
+                        {' '}
+                        - {item.diet_schedules.time}
+                      </span>
+                    ) : null}
                   </p>
                 </div>
-                <div className="text-sm ml-auto font-medium">
-                  {new Date(item.created_at).toLocaleString('us-US', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
+                <div className="text-xs font-medium ml-auto">
+                  {format(new Date(item.created_at), 'PP')}
                 </div>
               </div>
             ))}

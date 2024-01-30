@@ -1,16 +1,18 @@
 'use client';
 
-import { BiHomeAlt2, BiLineChart } from 'react-icons/bi';
-import { AiOutlinePlus, AiOutlineHeart } from 'react-icons/ai';
-import { BsCalendar } from 'react-icons/bs';
+import Link from 'next/link';
+import { useState } from 'react';
+import {
+  AreaChart,
+  Home,
+  CalendarCheck2,
+  Heart,
+  Plus,
+  Dumbbell,
+  Pizza,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import {
   Dialog,
   DialogContent,
@@ -18,38 +20,38 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import Link from 'next/link';
-import { useState } from 'react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from './ui/label';
 
 const routes = [
   {
     label: 'Home',
     icon: (
-      <BiHomeAlt2 className="w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
+      <Home className="w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
     ),
     path: '/',
   },
   {
     label: 'Activity',
     icon: (
-      <BiLineChart className="w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
+      <AreaChart className="w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
     ),
     path: '/activity',
   },
   {
-    cta: <AiOutlinePlus />,
+    cta: <Plus />,
   },
   {
     label: 'Schedules',
     icon: (
-      <BsCalendar className="w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
+      <CalendarCheck2 className="w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
     ),
     path: '/schedule',
   },
   {
     label: 'Favorite',
     icon: (
-      <AiOutlineHeart className="w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
+      <Heart className="w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
     ),
     path: '/favorite',
   },
@@ -57,33 +59,22 @@ const routes = [
 
 const BottomBar = () => {
   const [open, setOpen] = useState(false);
+  const [dietKind, setDietKind] = useState('');
 
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full h-16 border-t py-3 bg-background">
       <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
         {routes.map((route, i) =>
           route.cta ? (
-            <TooltipProvider key={i}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="rounded-full mb-4 mx-auto"
-                    size="icon"
-                    onClick={() => setOpen(true)}
-                  >
-                    {route.cta}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div className="flex items-center gap-x-1">
-                    Start・
-                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground ml-auto">
-                      &#8984;&nbsp;K
-                    </kbd>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Button
+              className="rounded-full mb-4 mx-auto"
+              size="icon"
+              id="cta"
+              onClick={() => setOpen(true)}
+              key={i}
+            >
+              {route.cta}
+            </Button>
           ) : (
             <Link
               key={route.label}
@@ -102,12 +93,48 @@ const BottomBar = () => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-[425px] md:max-w-lg">
           <DialogHeader className="flex items-center justify-center">
-            <DialogTitle>New Diet Plan</DialogTitle>
+            <DialogTitle>New Diet</DialogTitle>
             <DialogDescription>
-              Create a new diet plan to track your progress and stay motivated!
+              Create a new diet plan. Track your progress and stay motivated!
             </DialogDescription>
           </DialogHeader>
-          <div>{/*  */}</div>
+          <div className="space-y-4">
+            <RadioGroup
+              defaultValue="card"
+              onValueChange={(e) => setDietKind(e)}
+              className="grid grid-cols-2 gap-4"
+            >
+              <div>
+                <RadioGroupItem
+                  value="food"
+                  id="food"
+                  className="peer sr-only"
+                />
+                <Label
+                  htmlFor="food"
+                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                >
+                  <Pizza className="mb-3 h-6 w-6" />
+                  Food
+                </Label>
+              </div>
+              <div>
+                <RadioGroupItem
+                  value="exercise"
+                  id="exercise"
+                  className="peer sr-only"
+                />
+                <Label
+                  htmlFor="exercise"
+                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                >
+                  <Dumbbell className="mb-3 h-6 w-6" />
+                  Exercise
+                </Label>
+              </div>
+            </RadioGroup>
+            <Button>Continue</Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

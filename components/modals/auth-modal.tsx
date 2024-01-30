@@ -31,6 +31,7 @@ const AuthModal = () => {
       onClose();
     }
   };
+
   return (
     <Modal
       title="Welcome back!"

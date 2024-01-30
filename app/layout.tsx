@@ -9,12 +9,12 @@ export const fontSans = FontSans({
 import ToasterProvider from '@/components/providers/toaster-provider';
 import ModalProvider from '@/components/providers/modal-provider';
 import UserProvider from '@/components/providers/user-provider';
-import { ThemeProvider } from '@/components/theme-provider';
 import SupabaseProvider from '@/components/providers/supabase-provider';
 import { ConfettiProvider } from '@/components/providers/confetti-provider';
 
 import Navbar from '@/components/navbar';
 import BottomBar from '@/components/bottom-bar';
+import Container from '@/components/container';
 
 export const metadata = {
   title: 'Next.js and Supabase Starter Kit',
@@ -31,19 +31,14 @@ export default function RootLayout({
       <body className={fontSans.className}>
         <SupabaseProvider>
           <UserProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <ConfettiProvider />
-              <ToasterProvider />
-              <ModalProvider />
+            <ConfettiProvider />
+            <ToasterProvider />
+            <ModalProvider />
+            <Container>
               <Navbar />
               <div>{children}</div>
               <BottomBar />
-            </ThemeProvider>
+            </Container>
           </UserProvider>
         </SupabaseProvider>
       </body>

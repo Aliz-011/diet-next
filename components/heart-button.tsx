@@ -1,6 +1,6 @@
 'use client';
 
-import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { Heart } from 'lucide-react';
 
 const HeartButton = () => {
   const hasFavorited = false;
@@ -13,14 +13,14 @@ const HeartButton = () => {
         rounded-full flex items-center justify-center bg-white border shadow-md p-2 hover:scale-110 transition
       "
     >
-      <AiOutlineHeart
+      <Heart
         size={20}
         className="
           text-gray-600
           absolute
         "
       />
-      <AiFillHeart
+      <Heart
         size={18}
         className={hasFavorited ? 'fill-rose-500' : 'fill-neutral-500/70'}
       />

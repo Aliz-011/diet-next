@@ -25,10 +25,12 @@ const SectionTabs = async () => {
 
   return (
     <section className="space-y-2">
-      <Heading
-        title="Foods & Exercises"
-        subtitle="Find your suitable food or exercises and add to your plan."
-      />
+      <div id="section-tabs">
+        <Heading
+          title="Foods & Exercises"
+          subtitle="Find your suitable food or exercises and add to your plan."
+        />
+      </div>
       <div className="mb-10">
         <Tabs defaultValue="foods">
           <TabsList className="mb-2">
@@ -38,7 +40,7 @@ const SectionTabs = async () => {
 
           <TabsContent
             value="foods"
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8"
           >
             {results.map((item: Food) => (
               <FoodCard key={item.id} data={item} />
@@ -46,7 +48,7 @@ const SectionTabs = async () => {
           </TabsContent>
           <TabsContent
             value="exercises"
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8"
           >
             {exercises.map((exercise, i) => (
               <ExerciseCard data={exercise} key={i} />
