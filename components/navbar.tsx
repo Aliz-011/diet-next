@@ -141,7 +141,7 @@ const Navbar = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
-                  <button onClick={() => onOpen()}>
+                  <button onClick={onOpen}>
                     <Avatar>
                       <AvatarImage
                         src={avatarUrl ? avatarUrl : '/images/placeholder.jpg'}

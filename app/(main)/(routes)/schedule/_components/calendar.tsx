@@ -12,6 +12,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { useUser } from '@/hooks/use-user';
 import { useConfettiStore } from '@/hooks/use-confetti-store';
 import { createClient } from '@/utils/supabase/client';
@@ -69,10 +71,16 @@ const Calendar = () => {
   return (
     <div className="my-5">
       <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-12 md:col-span-4 h-96">
-          <ScrollArea className="h-72 rounded-md border">
-            <div className="p-4">
-              <h4 className="mb-4 text-sm font-medium leading-none">Plans</h4>
+        <Card className="col-span-12 md:col-span-4 h-96 overflow-hidden">
+          <CardHeader>
+            <CardTitle>Plans</CardTitle>
+            <span className="text-sm">
+              You just need to click the name of the diet on the calendar to
+              mark it as `done`.
+            </span>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-72">
               {currentEvents.length <= 0 && (
                 <p className="text-sm font-semibold text-muted-foreground text-center">
                   No plans yet.
@@ -102,9 +110,10 @@ const Calendar = () => {
                     </p>
                   </div>
                 ))}
-            </div>
-          </ScrollArea>
-        </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
         <div className="col-span-12 md:col-span-8">
           <div className="ml-4">
             <FullCalendar
@@ -132,7 +141,9 @@ const Calendar = () => {
                   title: event.diet_schedules.time
                     ? `${event.diet_schedules.name} - ${event.diet_schedules.time}`
                     : `${event.diet_schedules.name} - ${event.diet_schedules.sets} sets x ${event.diet_schedules.reps} repetitions`,
-                  date: event.created_at,
+                  date: event.diet_schedules.dte
+                    ? event.diet_schedules.dte
+                    : event.created_at,
                 }))}
             />
           </div>

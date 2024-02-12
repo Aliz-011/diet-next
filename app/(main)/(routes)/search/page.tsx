@@ -12,6 +12,11 @@ const SearchPage = async ({
     minProtein: string;
     minCalories: string;
     minSugar: string;
+    maxFat: string | undefined;
+    maxCarbs: string | undefined;
+    maxProtein: string | undefined;
+    maxCalories: string | undefined;
+    maxSugar: string | undefined;
     name: string | undefined;
   };
 }) => {

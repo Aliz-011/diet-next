@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -39,6 +40,7 @@ const AccountWeightForm = () => {
   const { user } = useUser();
   const supabase = createClient();
   const router = useRouter();
+  const params = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
   const [weight, setWeight] = useState('');
@@ -64,6 +66,12 @@ const AccountWeightForm = () => {
 
     fetchWeight();
   }, [setWeight, supabase]);
+
+  useEffect(() => {
+    if (params.get('error') === 'requiredFields') {
+      toast.error('Fill all required fields!');
+    }
+  }, [params]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -99,8 +107,8 @@ const AccountWeightForm = () => {
                 Weight
               </h2>
               <p className="mt-1 text-sm leading-6 dark:text-gray-400">
-                Update your weight once a month to keep track of your weight
-                goal!
+                As for this one, you need to update your weight once a month to
+                proceed to use the rest of functionality of the app.
               </p>
             </div>
 
@@ -148,7 +156,9 @@ const AccountWeightForm = () => {
                           <SelectItem value="heavy">Heavy</SelectItem>
                         </SelectContent>
                       </Select>
-
+                      <FormDescription>
+                        Intensity of your daily activity
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

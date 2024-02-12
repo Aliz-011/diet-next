@@ -12,6 +12,7 @@ import {
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { DateRange } from 'react-day-picker';
 import toast from 'react-hot-toast';
+import Image from 'next/image';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -35,13 +36,12 @@ import { cn } from '@/lib/utils';
 import { createClient } from '@/utils/supabase/client';
 
 interface SupabaseData {
-  id: any;
-  diet_type: any;
-  diet_schedules: any;
-  status: any;
+  id: string;
+  diet_type: string;
+  diet_schedules: Record<string, any>;
+  status: string;
   created_at: any;
 }
-
 interface GraphData {
   name: string;
   total: number;
@@ -315,12 +315,19 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
             <ScrollArea className="h-96">
               <div className="py-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {exercises &&
+                  {exercises && exercises.length > 0 ? (
                     exercises.map((exercise) => (
                       <div
-                        className="flex justify-between border shadow-sm rounded p-3"
+                        className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
                         key={exercise.id}
                       >
+                        <Image
+                          src={exercise.diet_schedules.gifUrl}
+                          alt={exercise.diet_schedules.name}
+                          width={40}
+                          height={40}
+                          className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+                        />
                         <div className="flex flex-col space-y-1">
                           <p className="font-medium leading-none capitalize">
                             {exercise.diet_schedules.name}
@@ -332,12 +339,20 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
                             {exercise.diet_schedules.sets} set x{' '}
                             {exercise.diet_schedules.reps} repetition
                           </p>
-                        </div>
-                        <div className="text-xs font-medium ml-auto">
-                          {format(new Date(exercise.created_at), 'PP')}
+                          <div className="text-xs font-medium">
+                            Added at:{' '}
+                            {format(new Date(exercise.created_at), 'PP')}
+                          </div>
                         </div>
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <div className="col-span-full flex items-center justify-center h-full">
+                      <p className="text-xl font-semibold">
+                        There is no data for this particular date
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </ScrollArea>

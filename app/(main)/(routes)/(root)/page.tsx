@@ -1,13 +1,15 @@
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import qs from 'query-string';
+
 import Ad from './_components/ad';
 import SectionTabs from './_components/section-tabs';
 import { SchedulesColumn, columns } from './_components/columns';
-
 import Heading from '@/components/heading';
 import HorizontalScrollbar from '@/components/horizontal-scrollbar';
 import { DataTable } from '@/components/table/data-table';
 
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 
 const SetupPage = async () => {
   const cookieStore = cookies();
@@ -20,6 +22,27 @@ const SetupPage = async () => {
     .from('schedules')
     .select('id, diet_type,diet_schedules,status,created_at')
     .eq('user_id', session?.user.id);
+
+  const { data: antropometri } = await supabase
+    .from('antropemetri')
+    .select('created_at')
+    .eq('user_id', session?.user?.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (
+    session?.user &&
+    new Date(antropometri?.created_at).getMonth() !== new Date().getMonth()
+  ) {
+    const url = qs.stringifyUrl({
+      url: '/account',
+      query: {
+        error: 'requiredFields',
+      },
+    });
+    redirect(url);
+  }
 
   const formattedSchedules: SchedulesColumn[] = data?.map((item) => ({
     id: item.id,

@@ -49,7 +49,7 @@ const Modal: React.FC<ModalProps> = ({
             w-full
             md:w-auto
             md:min-w-[30vw]
-            md:max-w-[750px] 
+            md:max-w-[1280px] 
             translate-x-[-50%] 
             translate-y-[-50%] 
             rounded-md 

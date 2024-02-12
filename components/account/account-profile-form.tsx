@@ -27,18 +27,12 @@ const formSchema = z.object({
   fullName: z.string().min(4, {
     message: 'Full name must be at least 4 characters.',
   }),
-  age: z
-    .number()
-    .gte(16, {
-      message: 'You should be at least 16 years old to use this app.',
-    })
-    .int(),
-  height: z
-    .number()
-    .gte(140, {
-      message: 'Your height is too short!',
-    })
-    .int(),
+  age: z.coerce.number().positive().gte(16, {
+    message: 'You should be at least 16 years old to use this app.',
+  }),
+  height: z.coerce.number().positive().gte(140, {
+    message: 'Your height is too short!',
+  }),
   sex: z.enum(['Male', 'Female']),
 });
 
@@ -80,6 +74,7 @@ const AccountProfileForm = () => {
       setIsLoading(false);
     }
   }
+
   return (
     <section className="my-10 border p-6 rounded-lg">
       <Form {...form}>
@@ -90,8 +85,8 @@ const AccountProfileForm = () => {
                 Profile
               </h2>
               <p className="mt-1 text-sm leading-6 dark:text-gray-400">
-                This information will be displayed publicly so be careful what
-                you share.
+                You have to fill this at least once, this will be used to
+                calculate the ideal weight, BMI, etc.
               </p>
             </div>
 

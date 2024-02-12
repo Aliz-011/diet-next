@@ -18,9 +18,7 @@ export const SearchClient = ({
   foods?: Food[];
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataPerPage] = useState(10);
-
-  console.log(foods);
+  const [dataPerPage] = useState(20);
 
   const lastIndex = currentPage * dataPerPage;
   const firstIndex = lastIndex - dataPerPage;

@@ -2,12 +2,12 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 
 import Modal from './modal';
+
 import useAuthModal from '@/hooks/use-auth-modal';
 import { createClient } from '@/utils/supabase/client';
 

@@ -17,10 +17,6 @@ export const steps = [
     selector: '#history',
     content: 'This section contains the history of your previous sessions',
   },
-  {
-    selector: '#cta',
-    content: 'You can add new diet sessions to your schedule',
-  },
 ];
 
 const Container = ({ children }: { children: React.ReactNode }) => {

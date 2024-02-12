@@ -1,9 +1,11 @@
+import { cookies } from 'next/headers';
+import Link from 'next/link';
+
+import { AccountAdditionalInfo } from '@/components/account/account-additional-info';
 import AccountBodyInfo from '@/components/account/account-body-info';
 import AccountProfileForm from '@/components/account/account-profile-form';
 import AccountWeightForm from '@/components/account/account-weight-form';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
-import Link from 'next/link';
 
 const AccountPage = async () => {
   const cookieStore = cookies();
@@ -30,6 +32,9 @@ const AccountPage = async () => {
 
       {/* bmi & other stuffs */}
       <AccountBodyInfo />
+
+      {/* Additional Info */}
+      <AccountAdditionalInfo />
     </>
   );
 };

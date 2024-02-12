@@ -67,7 +67,7 @@ export type Food = {
   diets: string[];
   occasions: any[];
   analyzedInstructions: AnalyzedInstruction[];
-  spoonacularSourceURL: string;
+  spoonacularSourceUrl: string;
 };
 
 export type AnalyzedInstruction = {

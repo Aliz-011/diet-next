@@ -5,15 +5,14 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-
-import useDietScheduleModal from '@/hooks/use-diet-schedule-modal';
-import { useUser } from '@/hooks/use-user';
+import { useRouter } from 'next/navigation';
+import { CalendarIcon } from '@radix-ui/react-icons';
+import { format } from 'date-fns';
 
 import Modal from './modal';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,13 +27,17 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+
 import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { CalendarIcon } from '@radix-ui/react-icons';
-import { Calendar } from '../ui/calendar';
+import useDietScheduleModal from '@/hooks/use-diet-schedule-modal';
+import { useUser } from '@/hooks/use-user';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
 
 const formSchema = z.object({
   dte: z.date({
@@ -67,6 +70,9 @@ const DietScheduleModal = () => {
           id: data?.id,
           name: data?.title,
           calories: data?.nutrition.nutrients[0].amount,
+          imgUrl: data?.image,
+          servings: data?.servings,
+          source: data?.spoonacularSourceUrl,
           ...values,
         },
       });
@@ -95,7 +101,7 @@ const DietScheduleModal = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div>
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Food&apos;s name</FormLabel>
               <FormControl>
                 <Input disabled value={data?.title} />
               </FormControl>
@@ -104,7 +110,7 @@ const DietScheduleModal = () => {
             </FormItem>
           </div>
 
-          <div className="flex items-center gap-x-4 justify-between">
+          <div className="flex flex-row items-center gap-x-4 justify-between">
             <FormField
               control={form.control}
               name="time"
@@ -160,11 +166,11 @@ const DietScheduleModal = () => {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
+                        disabled={(date) => date < new Date()}
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
-                  <FormDescription>Date you want to eat.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

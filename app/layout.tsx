@@ -17,7 +17,7 @@ import BottomBar from '@/components/bottom-bar';
 import Container from '@/components/container';
 
 export const metadata = {
-  title: 'Next.js and Supabase Starter Kit',
+  title: 'Digest - Diet and Exercise',
   description: 'The fastest way to build apps with Next.js and Supabase',
 };
 

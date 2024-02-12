@@ -1,10 +1,13 @@
 'use client';
 
-import usePreviewModal from '@/hooks/use-preview-modal';
-import Modal from './modal';
-import { Button } from '../ui/button';
-import useFavorite from '@/hooks/use-favorite';
 import Image from 'next/image';
+import Link from 'next/link';
+
+import Modal from './modal';
+import { Button } from '@/components/ui/button';
+
+import usePreviewModal from '@/hooks/use-preview-modal';
+import useFavorite from '@/hooks/use-favorite';
 import { useUser } from '@/hooks/use-user';
 import useAuthModal from '@/hooks/use-auth-modal';
 
@@ -63,7 +66,7 @@ const PreviewModal = () => {
             </h1>
             <div className="mt-3 flex items-end justify-between">
               <p className=" text-gray-500 font-medium">
-                {data?.servings} serving(s)
+                {data?.servings} {data?.servings > 1 ? 'servings' : 'serving'}
               </p>
             </div>
             <div className="mt-3 flex items-end justify-between">
@@ -85,14 +88,24 @@ const PreviewModal = () => {
                 </ul>
               </div>
             </div>
-            <div className="mt-4 flex items-center gap-x-3">
-              <Button
-                onClick={onAddToCart}
-                className="flex items-center gap-x-2"
-              >
-                Add To Favorite
-              </Button>
-            </div>
+          </div>
+        </div>
+
+        <div className="col-span-full">
+          <div>
+            <div dangerouslySetInnerHTML={{ __html: data?.summary }} />
+            <Link
+              target="_blank"
+              href={`${data.spoonacularSourceUrl}`}
+              className="underline text-blue-500"
+            >
+              Source
+            </Link>
+          </div>
+          <div className="mt-4 flex items-center gap-x-3">
+            <Button onClick={onAddToCart} className="flex items-center gap-x-2">
+              Add To Favorite
+            </Button>
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ export const columns: ColumnDef<SchedulesColumn>[] = [
   },
   {
     accessorKey: 'diet_schedules',
-    header: 'Items',
+    header: 'Name',
   },
   {
     accessorKey: 'diet_type',
