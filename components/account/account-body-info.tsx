@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Badge } from '../ui/badge';
+import { ArrowRightIcon } from '@radix-ui/react-icons';
+
+import { Badge } from '@/components/ui/badge';
+
 import { useUser } from '@/hooks/use-user';
 import { createClient } from '@/utils/supabase/client';
 
@@ -118,7 +121,11 @@ const AccountBodyInfo = () => {
             <h3 className="mt-1 text-sm font-medium leading-6 dark:text-gray-200 w-2/3">
               Your ideal weight:
             </h3>
-            <Badge>{idealWeight} kg</Badge>
+            <div className="flex items-center justify-end md:w-full">
+              <span className="text-sm">{weight}kg</span>
+              <ArrowRightIcon className="w-8 h-4" />
+              <Badge>{idealWeight}kg</Badge>
+            </div>
           </div>
           <div className="flex gap-x-2 items-center w-full md:w-1/3">
             <h3 className="mt-1 text-sm font-medium leading-6 dark:text-gray-200 w-2/3">

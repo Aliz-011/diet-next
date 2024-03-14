@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { useUser } from '@/hooks/use-user';
@@ -50,6 +50,7 @@ const ExerciseScheduleModal = () => {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [weight, setWeight] = useState(0);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,15 +60,37 @@ const ExerciseScheduleModal = () => {
     },
   });
 
+  useEffect(() => {
+    const fetchWeight = async () => {
+      const { data: antropometri, error } = await supabase
+        .from('antropemetri')
+        .select('weight')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (!error) {
+        setWeight(antropometri.weight);
+      }
+    };
+
+    fetchWeight();
+  }, [setWeight, user]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
+      const isUsingEquipment = data?.equipment !== 'body weight';
       const { error } = await supabase.from('schedules').insert({
         user_id: user?.id,
         diet_type: 'exercise',
         diet_schedules: {
           ...data,
           ...values,
+          caloriesBurned: isUsingEquipment
+            ? ((3.5 * 3.5 * weight) / 200) * (values.sets + values.sets - 1)
+            : 0.32 * values.sets * values.reps,
         },
       });
       if (error) throw error;

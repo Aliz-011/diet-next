@@ -81,35 +81,41 @@ const Calendar = () => {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-72">
-              {currentEvents.length <= 0 && (
-                <p className="text-sm font-semibold text-muted-foreground text-center">
-                  No plans yet.
-                </p>
-              )}
-              {currentEvents.length > 0 &&
-                currentEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className={cn(
-                      'my-2.5 rounded-sm border p-3',
-                      event.status === 'done' ? 'bg-green-100' : 'bg-red-100'
-                    )}
-                  >
-                    <h3 className="capitalize font-semibold">
-                      {event.diet_schedules.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(event.created_at).toLocaleString('us-US', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}{' '}
-                      <span className="font-semibold uppercase">
-                        ({event.status})
-                      </span>
+              <div className="pb-4">
+                <div className="space-y-2">
+                  {currentEvents.length <= 0 && (
+                    <p className="text-sm font-semibold text-muted-foreground text-center">
+                      No plans yet.
                     </p>
-                  </div>
-                ))}
+                  )}
+                  {currentEvents.length > 0 &&
+                    currentEvents.map((event) => (
+                      <div
+                        key={event.id}
+                        className={cn(
+                          'rounded-sm border p-3',
+                          event.status === 'done'
+                            ? 'bg-green-100'
+                            : 'bg-red-100'
+                        )}
+                      >
+                        <h3 className="capitalize font-semibold">
+                          {event.diet_schedules.name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(event.created_at).toLocaleString('us-US', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                          })}{' '}
+                          <span className="font-semibold uppercase">
+                            ({event.status})
+                          </span>
+                        </p>
+                      </div>
+                    ))}
+                </div>
+              </div>
             </ScrollArea>
           </CardContent>
         </Card>

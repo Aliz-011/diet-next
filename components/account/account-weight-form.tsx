@@ -94,7 +94,7 @@ const AccountWeightForm = () => {
   }
 
   const disabled = useMemo(() => {
-    return new Date(weight).getMonth() === new Date().getMonth();
+    return new Date(weight).getDay() === new Date().getDay();
   }, [weight]);
 
   return (

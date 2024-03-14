@@ -18,19 +18,19 @@ interface OverviewProps {
 
 export const Overview: React.FC<OverviewProps> = ({ data, param }) => {
   return (
-    <ResponsiveContainer width="100%" height={500}>
+    <ResponsiveContainer width="100%" height={350}>
       <LineChart
         width={500}
         height={300}
         data={data}
-        margin={{ top: 5, right: 20, bottom: 5, left: 20 }}
+        margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
       >
-        <XAxis dataKey="name" />
+        <XAxis dataKey="date" hide />
         <YAxis tickFormatter={(value) => `${value}${param}`} />
-        <Tooltip />
+        <Tooltip content={<CustomTooltip />} />
         <Line
           type="monotone"
-          dataKey="total"
+          dataKey="weight"
           stroke="#8884d8"
           activeDot={{ r: 8 }}
         />
@@ -40,3 +40,16 @@ export const Overview: React.FC<OverviewProps> = ({ data, param }) => {
     </ResponsiveContainer>
   );
 };
+
+function CustomTooltip({ payload, label, active }: any) {
+  if (active) {
+    return (
+      <div className="border p-3 bg-gray-700/5">
+        <p className="font-medium">Date: {label}</p>
+        <p className="text-muted-foreground">Weight: {payload[0].value}kg</p>
+      </div>
+    );
+  }
+
+  return null;
+}

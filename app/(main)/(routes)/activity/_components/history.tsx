@@ -225,7 +225,7 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
                           </p>
                         </div>
                         <div className="text-xs font-medium ml-auto">
-                          {format(new Date(food.created_at), 'PP')}
+                          {format(new Date(food.diet_schedules.dte), 'PP')}
                         </div>
                       </div>
                     ))

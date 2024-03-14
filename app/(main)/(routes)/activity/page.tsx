@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers';
 
 import Heading from '@/components/heading';
-import { Overview } from '@/components/overview';
 import {
   Card,
   CardContent,
@@ -12,8 +11,9 @@ import {
 import { RecentActivity } from './_components/recent-activity';
 
 import { createClient } from '@/utils/supabase/server';
-import { getCaloriesGraph, getWeightGraph } from '@/actions/get-graph-activity';
+import { getCaloriesGraph } from '@/actions/get-graph-activity';
 import { History } from './_components/history';
+import { WeightOverview } from './_components/weight-overview';
 
 const ActivityPage = async () => {
   const cookieStore = cookies();
@@ -34,23 +34,17 @@ const ActivityPage = async () => {
     .from('schedules')
     .select('id, diet_type, diet_schedules, status, created_at')
     .eq('status', 'done')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  const weightGraph = await getWeightGraph();
   const caloriesGraph = await getCaloriesGraph();
 
   return (
     <div>
       <Heading title="Activity" subtitle="Your recent activity" />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 my-5">
-        <Card className="col-span-full md:col-span-4">
-          <CardHeader>
-            <CardTitle>Weight overview</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <Overview data={weightGraph} param="kg" />
-          </CardContent>
-        </Card>
+        <WeightOverview />
+
         <Card className="col-span-full md:col-span-3">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>

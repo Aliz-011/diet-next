@@ -10,6 +10,10 @@ import HorizontalScrollbar from '@/components/horizontal-scrollbar';
 import { DataTable } from '@/components/table/data-table';
 
 import { createClient } from '@/utils/supabase/server';
+import {
+  getTodayBurnedCalories,
+  getTodayIntakeCalories,
+} from '@/actions/get-graph-activity';
 
 const SetupPage = async () => {
   const cookieStore = cookies();
@@ -33,7 +37,7 @@ const SetupPage = async () => {
 
   if (
     session?.user &&
-    new Date(antropometri?.created_at).getMonth() !== new Date().getMonth()
+    new Date(antropometri?.created_at).getDay() !== new Date().getDay()
   ) {
     const url = qs.stringifyUrl({
       url: '/account',
@@ -43,6 +47,9 @@ const SetupPage = async () => {
     });
     redirect(url);
   }
+
+  const totalCaloriesConsumed = await getTodayIntakeCalories();
+  const totalCaloriesBurned = await getTodayBurnedCalories();
 
   const formattedSchedules: SchedulesColumn[] = data?.map((item) => ({
     id: item.id,
@@ -58,6 +65,19 @@ const SetupPage = async () => {
 
   return (
     <div className="space-y-4">
+      <div
+        className="p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+        role="alert"
+      >
+        You consumed&nbsp;
+        <span className="font-medium">
+          {totalCaloriesConsumed} calories
+        </span>{' '}
+        and burned about&nbsp;
+        <span className="font-medium">{totalCaloriesBurned} calories</span>{' '}
+        today.
+      </div>
+
       <Ad />
       <SectionTabs />
       <HorizontalScrollbar />

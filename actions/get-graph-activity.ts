@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { formatISO } from 'date-fns';
 
 import { createClient } from '@/utils/supabase/server';
 
@@ -71,10 +72,17 @@ export const getWeightGraph = async () => {
     },
   ];
 
+  if (!antropometri) {
+    return graphData;
+  }
+
   // Iterate over antropometri data and update graphData
-  antropometri?.forEach((order) => {
-    const month = new Date(order.created_at).getMonth(); // Get month (0-11)
-    graphData[month].total += order.weight;
+  antropometri?.forEach((item) => {
+    const month = new Date(item.created_at).getMonth(); // Get month (0-11)
+    graphData[month].total +=
+      item.weight /
+      antropometri.filter((x) => new Date(x.created_at).getMonth() === month)
+        .length;
   });
 
   return graphData;
@@ -152,4 +160,70 @@ export const getCaloriesGraph = async () => {
   });
 
   return graphData;
+};
+
+export const getTodayIntakeCalories = async () => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const { data } = await supabase
+    .from('schedules')
+    .select('id, diet_schedules, created_at')
+    .eq('user_id', session?.user?.id)
+    .eq('status', 'done')
+    .eq('diet_type', 'diet')
+    .order('created_at', { ascending: false });
+
+  let totalCalories = 0;
+
+  if (!data) {
+    return totalCalories;
+  }
+
+  const filteredData = data?.filter((item) =>
+    item.diet_schedules.dte.includes(
+      formatISO(new Date(), { representation: 'date' })
+    )
+  );
+
+  for (const item of filteredData) {
+    totalCalories += item.diet_schedules.calories;
+  }
+
+  return totalCalories;
+};
+
+export const getTodayBurnedCalories = async () => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const { data } = await supabase
+    .from('schedules')
+    .select('id, diet_schedules, created_at')
+    .eq('user_id', session?.user?.id)
+    .eq('status', 'done')
+    .eq('diet_type', 'exercise')
+    .order('created_at', { ascending: false });
+
+  let totalCalories = 0;
+
+  if (!data) {
+    return totalCalories;
+  }
+
+  const filteredData = data?.filter((item) =>
+    item.created_at.includes(formatISO(new Date(), { representation: 'date' }))
+  );
+
+  for (const item of filteredData!) {
+    totalCalories += item.diet_schedules.caloriesBurned;
+  }
+
+  return totalCalories;
 };

@@ -30,7 +30,7 @@ const SchedulePage = async () => {
     <div>
       <Heading title="Calendar" subtitle="Full Calendar Interactive Page" />
       <Calendar />
-      <List data={data} />
+      {/* <List data={data} /> */}
     </div>
   );
 };
