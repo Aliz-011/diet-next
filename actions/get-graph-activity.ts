@@ -169,27 +169,24 @@ export const getTodayIntakeCalories = async () => {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const { data } = await supabase
+  const currentDate = new Date();
+  const result = formatISO(currentDate, { representation: 'date' });
+
+  const { data, error } = await supabase
     .from('schedules')
     .select('id, diet_schedules, created_at')
     .eq('user_id', session?.user?.id)
     .eq('status', 'done')
     .eq('diet_type', 'diet')
-    .order('created_at', { ascending: false });
+    .containedBy('diet_schedules', { dte: result });
 
   let totalCalories = 0;
 
-  if (!data) {
+  if (error) {
     return totalCalories;
   }
 
-  const filteredData = data?.filter((item) =>
-    item.diet_schedules.dte.includes(
-      formatISO(new Date(), { representation: 'date' })
-    )
-  );
-
-  for (const item of filteredData) {
+  for (const item of data) {
     totalCalories += item.diet_schedules.calories;
   }
 
@@ -203,27 +200,22 @@ export const getTodayBurnedCalories = async () => {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('schedules')
     .select('id, diet_schedules, created_at')
     .eq('user_id', session?.user?.id)
     .eq('status', 'done')
-    .eq('diet_type', 'exercise')
-    .order('created_at', { ascending: false });
+    .eq('diet_type', 'exercise');
 
   let totalCalories = 0;
 
-  if (!data) {
+  if (error) {
     return totalCalories;
   }
 
-  const filteredData = data?.filter((item) =>
-    item.created_at.includes(formatISO(new Date(), { representation: 'date' }))
-  );
-
-  for (const item of filteredData!) {
-    totalCalories += item.diet_schedules.caloriesBurned;
+  for (const item of data) {
+    totalCalories += item.diet_schedules.burned;
   }
 
-  return totalCalories;
+  return totalCalories.toFixed(2);
 };

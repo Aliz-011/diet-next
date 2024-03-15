@@ -10,10 +10,6 @@ import HorizontalScrollbar from '@/components/horizontal-scrollbar';
 import { DataTable } from '@/components/table/data-table';
 
 import { createClient } from '@/utils/supabase/server';
-import {
-  getTodayBurnedCalories,
-  getTodayIntakeCalories,
-} from '@/actions/get-graph-activity';
 
 const SetupPage = async () => {
   const cookieStore = cookies();
@@ -48,9 +44,6 @@ const SetupPage = async () => {
     redirect(url);
   }
 
-  const totalCaloriesConsumed = await getTodayIntakeCalories();
-  const totalCaloriesBurned = await getTodayBurnedCalories();
-
   const formattedSchedules: SchedulesColumn[] = data?.map((item) => ({
     id: item.id,
     diet_type: item.diet_type,
@@ -65,19 +58,6 @@ const SetupPage = async () => {
 
   return (
     <div className="space-y-4">
-      <div
-        className="p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-        role="alert"
-      >
-        You consumed&nbsp;
-        <span className="font-medium">
-          {totalCaloriesConsumed} calories
-        </span>{' '}
-        and burned about&nbsp;
-        <span className="font-medium">{totalCaloriesBurned} calories</span>{' '}
-        today.
-      </div>
-
       <Ad />
       <SectionTabs />
       <HorizontalScrollbar />

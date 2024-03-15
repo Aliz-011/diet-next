@@ -37,7 +37,7 @@ const routes = [
 const BottomBar = () => {
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full h-16 border-t py-3 bg-background">
-      <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
+      <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
         {routes.map((route, i) => (
           <Link
             key={i}

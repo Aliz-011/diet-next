@@ -71,7 +71,7 @@ export const WeightOverview = () => {
   }, [date.to, date.from, setData, user?.id]);
 
   return (
-    <Card className="col-span-full md:col-span-4">
+    <Card className="col-span-full lg:col-span-4">
       <CardHeader>
         <CardTitle>Weight overview</CardTitle>
         <div className="flex items-center gap-x-2 w-full justify-end">

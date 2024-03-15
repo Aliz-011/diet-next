@@ -40,7 +40,7 @@ import { useUser } from '@/hooks/use-user';
 import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
-  dte: z.date({
+  dte: z.coerce.date({
     required_error: 'A date is required.',
   }),
   time: z.enum(['breakfast', 'lunch', 'dinner'], {
@@ -70,15 +70,17 @@ const DietScheduleModal = () => {
           id: data?.id,
           name: data?.title,
           calories: data?.nutrition.nutrients[0].amount,
+          burned: 0,
           imgUrl: data?.image,
           servings: data?.servings,
           source: data?.spoonacularSourceUrl,
-          ...values,
+          time: values.time,
+          dte: new Date(values.dte.toUTCString()),
         },
       });
       if (error) throw error;
 
-      toast.success('Success add to your plan');
+      toast.success('Success! You can check your schedules');
       router.refresh();
       form.reset();
     } catch (error: any) {
@@ -89,6 +91,11 @@ const DietScheduleModal = () => {
       form.reset();
     }
   }
+
+  const currentDate = new Date();
+  const yesterday = new Date(
+    currentDate.setDate(currentDate.getDate() - 1)
+  ).toISOString();
 
   return (
     <Modal
@@ -166,9 +173,7 @@ const DietScheduleModal = () => {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date.getDate() < new Date().getDate()
-                        }
+                        disabled={(date) => date < new Date()}
                         initialFocus
                       />
                     </PopoverContent>

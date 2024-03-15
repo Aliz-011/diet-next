@@ -30,7 +30,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Overview } from '@/components/overview';
+import { CaloriesOverview } from './calories-overview';
 
 import { cn } from '@/lib/utils';
 import { createClient } from '@/utils/supabase/client';
@@ -42,12 +42,8 @@ interface SupabaseData {
   status: string;
   created_at: any;
 }
-interface GraphData {
-  name: string;
-  total: number;
-}
 
-export const History = ({ calories }: { calories: GraphData[] }) => {
+export const History = () => {
   const ranges = [
     { label: 'Last 7 days', duration: { days: 7 } },
     { label: 'Last 14 days', duration: { days: 14 } },
@@ -84,11 +80,11 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
         .select('id, diet_type, diet_schedules, status, created_at')
         .eq('status', 'done')
         .eq('diet_type', 'diet')
-        .gte('created_at', startOfMonth(date?.from!).toISOString())
         .lte(
           'created_at',
           endOfMonth(date?.to ? date.to : new Date()).toISOString()
         )
+        .gte('created_at', startOfMonth(date?.from!).toISOString())
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -99,7 +95,7 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
     };
 
     fetchFoods();
-  }, [setDate, date]);
+  }, [date?.from, date?.to, setFoods]);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -108,11 +104,11 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
         .select('id, diet_type, diet_schedules, status, created_at')
         .eq('status', 'done')
         .eq('diet_type', 'exercise')
-        .gte('created_at', startOfMonth(date?.from!).toISOString())
         .lte(
           'created_at',
           endOfMonth(date?.to ? date.to : new Date()).toISOString()
         )
+        .gte('created_at', startOfMonth(date?.from!).toISOString())
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -123,25 +119,25 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
     };
 
     fetchExercises();
-  }, [setDate, date]);
+  }, [date?.from, date?.to, setExercises]);
 
   return (
-    <Tabs defaultValue="food" className="col-span-full">
-      <TabsList className="grid grid-cols-2 w-[400px]">
-        <TabsTrigger value="food">Food</TabsTrigger>
+    <Tabs defaultValue="calories" className="col-span-full space-y-4">
+      <TabsList className="grid grid-cols-2 w-[400px] ">
+        <TabsTrigger value="calories">Food</TabsTrigger>
         <TabsTrigger value="exercise">Exercise</TabsTrigger>
       </TabsList>
-      <TabsContent value="food">
-        <Card className="col-span-full">
-          <CardHeader>
-            <CardTitle>Foods history</CardTitle>
-            <CardDescription>
-              All time specific about how much your calories intake.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Overview data={calories} param="kcal" />
-            <div className="space-y-4 mt-8 w-full">
+      <Card>
+        <CardHeader>
+          <h3 className="font-semibold">Calories history</h3>
+          <span className="text-muted-foreground text-sm">
+            All time specific about how much your calories intake.
+          </span>
+        </CardHeader>
+        <CardContent>
+          <CaloriesOverview />
+          <TabsContent value="calories">
+            <div className="space-y-4 w-full col-span-full">
               <div className="grid gap-2">
                 <Popover>
                   <PopoverTrigger className="ml-auto" asChild>
@@ -221,7 +217,7 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
                             </span>
                           </p>
                           <p className="text-sm font-medium">
-                            {food.diet_schedules.calories} kcal
+                            {food.diet_schedules.calories}cal
                           </p>
                         </div>
                         <div className="text-xs font-medium ml-auto">
@@ -239,126 +235,121 @@ export const History = ({ calories }: { calories: GraphData[] }) => {
                 </div>
               </ScrollArea>
             </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
+          </TabsContent>
 
-      <TabsContent value="exercise">
-        <Card className="col-span-full min-h-[30rem]">
-          <CardHeader className="flex flex-col md:flex-row md:items-center justify-between">
-            <div className="space-y-2">
-              <CardTitle>Exercise history</CardTitle>
-              <CardDescription>
-                Specific information about your exercise.
-              </CardDescription>
-            </div>
-            <div className="grid gap-2">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    id="date"
-                    variant={'outline'}
-                    className={cn(
-                      'w-[260px] justify-start text-left font-normal',
-                      !date && 'text-muted-foreground'
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date?.from ? (
-                      date.to ? (
-                        <>
-                          {format(date.from, 'LLL dd, y')} -{' '}
-                          {format(date.to, 'LLL dd, y')}
-                        </>
-                      ) : (
-                        format(date.from, 'LLL dd, y')
-                      )
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="w-auto p-0 flex items-center divide-x divide-gray-200 dark:divide-gray-800"
-                  align="end"
-                >
-                  <div className="flex flex-col gap-y-2 items-start justify-start">
-                    {ranges.map((range) => (
+          <TabsContent value="exercise">
+            <div className="col-span-full min-h-[30rem]">
+              <div className="space-y-4 w-full">
+                <div className="grid gap-2">
+                  <Popover>
+                    <PopoverTrigger className="ml-auto" asChild>
                       <Button
-                        variant="ghost"
-                        key={range.label}
+                        id="date"
+                        variant={'outline'}
                         className={cn(
-                          'rounded-none px-6 w-full',
-                          isRangeSelected(range.duration)
-                            ? 'bg-gray-100 dark:bg-gray-800'
-                            : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                          'w-[260px] justify-start text-left font-normal',
+                          !date && 'text-muted-foreground'
                         )}
-                        onClick={() => selectRange(range.duration)}
                       >
-                        {range.label}
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date?.from ? (
+                          date.to ? (
+                            <>
+                              {format(date.from, 'LLL dd, y')} -{' '}
+                              {format(date.to, 'LLL dd, y')}
+                            </>
+                          ) : (
+                            format(date.from, 'LLL dd, y')
+                          )
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
                       </Button>
-                    ))}
-                  </div>
-                  <Calendar
-                    initialFocus
-                    mode="range"
-                    defaultMonth={date?.from}
-                    selected={date}
-                    onSelect={setDate}
-                    numberOfMonths={2}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-96">
-              <div className="py-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {exercises && exercises.length > 0 ? (
-                    exercises.map((exercise) => (
-                      <div
-                        className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-                        key={exercise.id}
-                      >
-                        <Image
-                          src={exercise.diet_schedules.gifUrl}
-                          alt={exercise.diet_schedules.name}
-                          width={40}
-                          height={40}
-                          className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
-                        />
-                        <div className="flex flex-col space-y-1">
-                          <p className="font-medium leading-none capitalize">
-                            {exercise.diet_schedules.name}
-                          </p>
-                          <p className="text-sm font-medium text-muted-foreground capitalize">
-                            {exercise.diet_type}
-                          </p>
-                          <p className="text-sm font-medium">
-                            {exercise.diet_schedules.sets} set x{' '}
-                            {exercise.diet_schedules.reps} repetition
-                          </p>
-                          <div className="text-xs font-medium">
-                            Added at:{' '}
-                            {format(new Date(exercise.created_at), 'PP')}
-                          </div>
-                        </div>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto p-0 flex items-center divide-x divide-gray-200 dark:divide-gray-800"
+                      align="end"
+                    >
+                      <div className="flex flex-col gap-y-2 items-start justify-start">
+                        {ranges.map((range) => (
+                          <Button
+                            variant="ghost"
+                            key={range.label}
+                            className={cn(
+                              'rounded-none px-6 w-full',
+                              isRangeSelected(range.duration)
+                                ? 'bg-gray-100 dark:bg-gray-800'
+                                : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                            )}
+                            onClick={() => selectRange(range.duration)}
+                          >
+                            {range.label}
+                          </Button>
+                        ))}
                       </div>
-                    ))
-                  ) : (
-                    <div className="col-span-full flex items-center justify-center h-full">
-                      <p className="text-xl font-semibold">
-                        There is no data for this particular date
-                      </p>
-                    </div>
-                  )}
+                      <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={date?.from}
+                        selected={date}
+                        onSelect={setDate}
+                        numberOfMonths={2}
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
+                <ScrollArea className="h-96">
+                  <div className="py-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {exercises && exercises.length > 0 ? (
+                        exercises.map((exercise) => (
+                          <div
+                            className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                            key={exercise.id}
+                          >
+                            <Image
+                              src={exercise.diet_schedules.gifUrl}
+                              alt={exercise.diet_schedules.name}
+                              width={40}
+                              height={40}
+                              className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+                            />
+                            <div className="flex flex-col space-y-1">
+                              <p className="font-medium leading-none capitalize">
+                                {exercise.diet_schedules.name}
+                              </p>
+                              <p className="text-sm font-medium text-muted-foreground capitalize">
+                                {exercise.diet_type}
+                              </p>
+                              <p className="text-sm font-medium">
+                                {exercise.diet_schedules.sets} set x{' '}
+                                {exercise.diet_schedules.reps} repetition
+                              </p>
+                              <div className="text-xs font-medium">
+                                Added at:{' '}
+                                {format(
+                                  new Date(exercise.diet_schedules.dte),
+                                  'PP'
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="col-span-full flex items-center justify-center h-full">
+                          <p className="text-xl font-semibold">
+                            There is no data for this particular date
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </ScrollArea>
               </div>
-            </ScrollArea>
-          </CardContent>
-        </Card>
-      </TabsContent>
+            </div>
+          </TabsContent>
+        </CardContent>
+      </Card>
     </Tabs>
   );
 };

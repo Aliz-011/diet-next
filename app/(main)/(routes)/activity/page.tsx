@@ -42,10 +42,10 @@ const ActivityPage = async () => {
   return (
     <div>
       <Heading title="Activity" subtitle="Your recent activity" />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 my-5">
+      <div className="grid gap-y-8 gap-x-4 grid-cols-2 lg:grid-cols-7 my-5">
         <WeightOverview />
 
-        <Card className="col-span-full md:col-span-3">
+        <Card className="col-span-full lg:col-span-3">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
             <CardDescription>
@@ -62,7 +62,7 @@ const ActivityPage = async () => {
             {schedules?.length! > 0 && <RecentActivity data={schedules} />}
           </CardContent>
         </Card>
-        <History calories={caloriesGraph} />
+        <History />
       </div>
     </div>
   );

@@ -21,9 +21,9 @@ export function RecentActivity({
         <div className="space-y-8">
           {data &&
             data.map((item) => (
-              <div className="flex justify-between" key={item.id}>
+              <div className="flex justify-between gap-x-2" key={item.id}>
                 <div className="flex flex-col space-y-1">
-                  <p className="font-medium leading-none capitalize">
+                  <p className="font-medium leading-none line-clamp-1 capitalize">
                     {item.diet_schedules.name}
                   </p>
                   <p className="text-sm font-medium capitalize">
@@ -37,7 +37,7 @@ export function RecentActivity({
                   </p>
                 </div>
                 <div className="text-xs font-medium ml-auto">
-                  {format(new Date(item.created_at), 'PP')}
+                  {format(new Date(item.diet_schedules.dte), 'PP')}
                 </div>
               </div>
             ))}

@@ -34,8 +34,8 @@ export const Overview: React.FC<OverviewProps> = ({ data, param }) => {
           stroke="#8884d8"
           activeDot={{ r: 8 }}
         />
+        {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
         <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-        <Legend />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -45,8 +45,10 @@ function CustomTooltip({ payload, label, active }: any) {
   if (active) {
     return (
       <div className="border p-3 bg-gray-700/5">
-        <p className="font-medium">Date: {label}</p>
-        <p className="text-muted-foreground">Weight: {payload[0].value}kg</p>
+        <p className="font-medium">{label}</p>
+        {payload && payload.length && (
+          <p className="text-muted-foreground">{payload[0].value}</p>
+        )}
       </div>
     );
   }

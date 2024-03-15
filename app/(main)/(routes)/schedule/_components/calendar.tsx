@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { formatISO } from 'date-fns';
 
 import { EventClickArg } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
@@ -24,7 +25,7 @@ type SchedulePlan = {
   diet_type: string;
   diet_schedules: any;
   status: string;
-  created_at: string | Date | number;
+  created_at: Date | number;
 };
 
 const Calendar = () => {

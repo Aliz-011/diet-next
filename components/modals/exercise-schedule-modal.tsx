@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { format } from 'date-fns';
+import { CalendarIcon } from '@radix-ui/react-icons';
 
 import { useUser } from '@/hooks/use-user';
 import useExerciseScheduleModal from '@/hooks/use-exercise-schedule-modal';
@@ -23,6 +25,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   reps: z.coerce
@@ -41,6 +50,9 @@ const formSchema = z.object({
     .gt(1, {
       message: 'Set should be greater than 0.',
     }),
+  dte: z.coerce.date({
+    required_error: 'A date is required.',
+  }),
 });
 
 const ExerciseScheduleModal = () => {
@@ -88,14 +100,17 @@ const ExerciseScheduleModal = () => {
         diet_schedules: {
           ...data,
           ...values,
-          caloriesBurned: isUsingEquipment
-            ? ((3.5 * 3.5 * weight) / 200) * (values.sets + values.sets - 1)
-            : 0.32 * values.sets * values.reps,
+          dte: new Date(values.dte.toUTCString()),
+          calories: 0,
+          burned: isUsingEquipment
+            ? ((3.5 * 3.5 * weight) / 200) *
+              (values.sets * values.reps * 2 + values.sets)
+            : 0.32 * (values.sets * values.reps * 2 + values.sets),
         },
       });
       if (error) throw error;
 
-      toast.success('Success add to your plan');
+      toast.success('Success! You can check your schedules');
       router.refresh();
       form.reset();
     } catch (error: any) {
@@ -159,6 +174,48 @@ const ExerciseScheduleModal = () => {
               )}
             />
           </div>
+          <div>
+            <FormField
+              control={form.control}
+              name="dte"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date to exercise</FormLabel>
+                  <Popover>
+                    <PopoverTrigger className="w-full" asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'PPP')
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <Button disabled={isLoading} type="submit">
             Add to plan
           </Button>
