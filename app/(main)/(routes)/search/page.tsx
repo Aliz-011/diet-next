@@ -48,7 +48,7 @@ const SearchPage = async ({
   }
 
   return (
-    <main className="space-y-6">
+    <main className="space-y-6 px-4 xl:px-0">
       <Heading title="Results" subtitle="The results we got for you" />
       {bodyContent}
     </main>

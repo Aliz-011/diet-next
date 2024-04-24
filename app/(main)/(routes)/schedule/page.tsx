@@ -1,6 +1,8 @@
+import { cookies } from 'next/headers';
+
 import Heading from '@/components/heading';
 import Calendar from './_components/calendar';
-import { cookies } from 'next/headers';
+
 import { createClient } from '@/utils/supabase/server';
 import { List } from './_components/list';
 
@@ -27,11 +29,20 @@ const SchedulePage = async () => {
   }
 
   return (
-    <div>
+    <main className="px-4 xl:px-0">
+      <div
+        className="p-4 mb-4 text-sm text-blue-800 flex items-center justify-center rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+        role="alert"
+      >
+        <span className="font-medium">
+          Click the name of the diet or exercise on the calendar to mark it as
+          `done`.
+        </span>{' '}
+      </div>
       <Heading title="Calendar" subtitle="Full Calendar Interactive Page" />
       <Calendar />
-      {/* <List data={data} /> */}
-    </div>
+      <List data={data} />
+    </main>
   );
 };
 

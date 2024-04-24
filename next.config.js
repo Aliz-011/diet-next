@@ -3,6 +3,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        hostname: 'img.spoonacular.com',
+        protocol: 'https',
+      },
+      {
         hostname: 'spoonacular.com',
         protocol: 'https',
       },

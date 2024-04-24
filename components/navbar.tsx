@@ -72,7 +72,7 @@ const Navbar = () => {
   return (
     <header className="z-20 border-b">
       <nav>
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-end sm:justify-between mx-auto py-4 px-4 md:px-0">
+        <div className="max-w-screen-xl flex flex-wrap items-center justify-end sm:justify-between mx-auto py-4 px-4 xl:px-0">
           <Link href="/" className="hidden sm:flex sm:items-center">
             <span className="self-center text-xl font-bold whitespace-nowrap dark:text-white">
               DIGEST

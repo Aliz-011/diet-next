@@ -45,9 +45,9 @@ function CustomTooltip({ payload, label, active }: any) {
   if (active) {
     return (
       <div className="border p-3 bg-gray-700/5">
-        <p className="font-medium">{label}</p>
+        <p className="font-medium">Date: {label}</p>
         {payload && payload.length && (
-          <p className="text-muted-foreground">{payload[0].value}</p>
+          <p className="text-muted-foreground">Weight: {payload[0].value}kg</p>
         )}
       </div>
     );

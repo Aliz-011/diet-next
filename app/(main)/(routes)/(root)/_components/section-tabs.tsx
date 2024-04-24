@@ -25,7 +25,7 @@ const SectionTabs = async () => {
 
   return (
     <section className="space-y-2">
-      <div id="section-tabs">
+      <div id="section-tabs" className="px-4">
         <Heading
           title="Foods & Exercises"
           subtitle="Find your suitable food or exercises and add to your plan."
@@ -33,7 +33,7 @@ const SectionTabs = async () => {
       </div>
       <div className="mb-10">
         <Tabs defaultValue="foods">
-          <TabsList className="mb-2">
+          <TabsList className="mb-2 mx-4">
             <TabsTrigger value="foods">Foods</TabsTrigger>
             <TabsTrigger value="exercises">Exercises</TabsTrigger>
           </TabsList>

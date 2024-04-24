@@ -9,11 +9,10 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { RecentActivity } from './_components/recent-activity';
-
-import { createClient } from '@/utils/supabase/server';
-import { getCaloriesGraph } from '@/actions/get-graph-activity';
 import { History } from './_components/history';
 import { WeightOverview } from './_components/weight-overview';
+
+import { createClient } from '@/utils/supabase/server';
 
 const ActivityPage = async () => {
   const cookieStore = cookies();
@@ -37,10 +36,8 @@ const ActivityPage = async () => {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  const caloriesGraph = await getCaloriesGraph();
-
   return (
-    <div>
+    <main className="px-4 xl:px-0">
       <Heading title="Activity" subtitle="Your recent activity" />
       <div className="grid gap-y-8 gap-x-4 grid-cols-2 lg:grid-cols-7 my-5">
         <WeightOverview />
@@ -64,7 +61,7 @@ const ActivityPage = async () => {
         </Card>
         <History />
       </div>
-    </div>
+    </main>
   );
 };
 

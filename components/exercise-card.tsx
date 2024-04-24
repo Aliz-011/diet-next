@@ -18,6 +18,7 @@ const ExerciseCard = ({ data }: { data: Exercises }) => {
   const addToSchedule = async () => {
     if (!user) {
       onOpen();
+      return;
     }
 
     scheduleModal.onOpen(data);

@@ -8,7 +8,7 @@ import Heading from './heading';
 
 const HorizontalScrollbar = () => {
   return (
-    <section className="pt-10" id="muscle-groups">
+    <section className="pt-10 px-4 xl:px-0" id="muscle-groups">
       <Heading
         title="Muscle Groups"
         subtitle="Search your exercise based on muscle group"

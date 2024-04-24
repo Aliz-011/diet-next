@@ -10,6 +10,7 @@ import HorizontalScrollbar from '@/components/horizontal-scrollbar';
 import { DataTable } from '@/components/table/data-table';
 
 import { createClient } from '@/utils/supabase/server';
+import { getTodayIntakeCalories } from '@/actions/get-graph-activity';
 
 const SetupPage = async () => {
   const cookieStore = cookies();
@@ -58,11 +59,10 @@ const SetupPage = async () => {
 
   return (
     <div className="space-y-4">
-      <Ad />
       <SectionTabs />
       <HorizontalScrollbar />
 
-      <div className="mx-auto pt-10">
+      <div className="mx-auto pt-10 px-4 xl:px-0">
         <div id="history">
           <Heading
             title="History"

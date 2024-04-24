@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
@@ -69,7 +69,7 @@ const AccountWeightForm = () => {
 
   useEffect(() => {
     if (params.get('error') === 'requiredFields') {
-      toast.error('Fill all required fields!');
+      toast.error('Isi berat badan hari ini terlebih dahulu!');
     }
   }, [params]);
 
@@ -84,8 +84,9 @@ const AccountWeightForm = () => {
 
       if (error) throw error;
 
-      toast.success('Success updating your weight!');
+      toast.success('Success! Sekarang kamu bisa memulai diet hari ini!');
       router.refresh();
+      router.push('/');
     } catch (error) {
       toast.error('Something went wrong.');
     } finally {
@@ -94,7 +95,7 @@ const AccountWeightForm = () => {
   }
 
   const disabled = useMemo(() => {
-    return new Date(weight).getDay() === new Date().getDay();
+    return new Date(weight).getDate() === new Date().getDate();
   }, [weight]);
 
   return (
@@ -103,13 +104,40 @@ const AccountWeightForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
           <div className="flex flex-col md:flex-row gap-x-8 w-full">
             <div className="w-full md:w-1/2">
-              <h2 className="text-base font-semibold leading-7 dark:text-gray-200">
-                Weight
-              </h2>
-              <p className="mt-1 text-sm leading-6 dark:text-gray-400">
-                As for this one, you need to update your weight once a month to
-                proceed to use the rest of functionality of the app.
-              </p>
+              <div>
+                <div className="text-base font-semibold leading-7 dark:text-gray-200">
+                  Weight
+                </div>
+                <p className="text-sm leading-6">
+                  Update your weight every day to keep track your progress.
+                </p>
+              </div>
+
+              <div className="mt-6 space-y-2">
+                <div className="font-semibold">Intensity level</div>
+                <ul>
+                  <li className="font-medium text-sm leading-6">
+                    Very light:{' '}
+                    <span className="font-normal">Little or no exercise</span>
+                  </li>
+                  <li className="font-medium text-sm leading-6">
+                    Light:{' '}
+                    <span className="font-normal">Exercise 1-3 times/week</span>
+                  </li>
+                  <li className="font-medium text-sm leading-6">
+                    Active:{' '}
+                    <span className="font-normal">
+                      Daily exercise or 3-4 times/week
+                    </span>
+                  </li>
+                  <li className="font-medium text-sm leading-6">
+                    Heavy:{' '}
+                    <span className="font-normal">
+                      Intense daily exercise or physical job
+                    </span>
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-8 md:mt-0 w-full md:w-1/2 pr-0 md:pr-48">

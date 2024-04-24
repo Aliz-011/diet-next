@@ -104,13 +104,13 @@ const ExerciseScheduleModal = () => {
           calories: 0,
           burned: isUsingEquipment
             ? ((3.5 * 3.5 * weight) / 200) *
-              (values.sets * values.reps * 2 + values.sets)
+              (values.sets * values.reps * (2 + values.sets))
             : 0.32 * (values.sets * values.reps * 2 + values.sets),
         },
       });
       if (error) throw error;
 
-      toast.success('Success! You can check your schedules');
+      toast.success('Exercise ditambahkan ke jadwal!');
       router.refresh();
       form.reset();
     } catch (error: any) {
