@@ -86,7 +86,7 @@ const AccountWeightForm = () => {
 
       toast.success('Success! Sekarang kamu bisa memulai diet hari ini!');
       router.refresh();
-      router.push('/');
+      window.location.href = '/';
     } catch (error) {
       toast.error('Something went wrong.');
     } finally {

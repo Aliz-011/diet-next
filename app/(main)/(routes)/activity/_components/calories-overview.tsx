@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { sub, isSameDay, format, type Duration } from 'date-fns';
+import { sub, isSameDay, format, type Duration, subDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
 import { Overview } from '@/components/overview';
@@ -22,9 +22,12 @@ export const CaloriesOverview = () => {
   const { user } = useUser();
   const [data, setData] = useState<GraphData[]>([]);
   const [date, setDate] = useState<DateRange>({
-    from: sub(new Date(), { days: 30 }),
+    from: subDays(new Date(), 30),
     to: new Date(),
   });
+
+  const defaultTo = new Date();
+  const defaultFrom = subDays(defaultTo, 30);
 
   const ranges = [
     { label: '1d', duration: { days: 1 } },
@@ -52,40 +55,38 @@ export const CaloriesOverview = () => {
   };
 
   const fetchGraphData = useCallback(async () => {
-    try {
-      const { data: schedules, error } = await supabase
-        .from('schedules')
-        .select('id, diet_schedules, status, created_at')
-        .eq('user_id', user?.id)
-        .eq('status', 'done')
-        .lte('created_at', formattedDate(date.to as Date))
-        .gte('created_at', formattedDate(date.from as Date));
+    const { data: schedules, error } = await supabase
+      .from('schedules')
+      .select('*')
+      .eq('user_id', user?.id)
+      .eq('status', 'done')
+      .lte('created_at', formattedDate(date.to as Date))
+      .gte('created_at', formattedDate(date.from as Date))
+      .order('created_at', { ascending: true });
 
-      if (error) {
-        throw new Error(error.message);
+    if (error) {
+      console.log(error);
+      return [];
+    }
+
+    const graphData: { [day: number]: GraphData } = {}; // Object to hold data for each day
+
+    schedules.forEach((item) => {
+      const day = new Date(item.diet_schedules.dte).getDay();
+      const formattedDate = format(
+        new Date(item.diet_schedules.dte),
+        'MMM dd, yyyy'
+      );
+
+      if (!graphData[day]) {
+        graphData[day] = { date: formattedDate, burned: 0, calories: 0 }; // Initialize if not exists
       }
 
-      const graphData: { [day: number]: GraphData } = {}; // Object to hold data for each day
+      graphData[day].calories += item.diet_schedules.calories;
+      graphData[day].burned += item.diet_schedules.burned;
+    });
 
-      schedules.forEach((item) => {
-        const day = new Date(item.diet_schedules.dte).getDay();
-        const formattedDate = format(
-          new Date(item.diet_schedules.dte),
-          'dd-MM-yyyy'
-        );
-
-        if (!graphData[day]) {
-          graphData[day] = { date: formattedDate, burned: 0, calories: 0 }; // Initialize if not exists
-        }
-
-        graphData[day].calories += item.diet_schedules.calories;
-        graphData[day].burned += item.diet_schedules.burned;
-      });
-
-      setData(Object.values(graphData));
-    } catch (error) {
-      console.error('Error fetching graph data:', error);
-    }
+    setData(Object.values(graphData));
   }, [date.from, date.to, setData, user?.id]);
 
   useEffect(() => {

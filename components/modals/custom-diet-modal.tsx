@@ -1,28 +1,31 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
 import { CalendarIcon } from '@radix-ui/react-icons';
-
-import { useUser } from '@/hooks/use-user';
-import useExerciseScheduleModal from '@/hooks/use-exercise-schedule-modal';
-import { createClient } from '@/utils/supabase/client';
+import { format } from 'date-fns';
+import { nanoid } from 'nanoid';
 
 import Modal from './modal';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,88 +34,60 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
+
+import { createClient } from '@/utils/supabase/client';
+import useCustomDiet from '@/hooks/use-custom-diet';
+import { useUser } from '@/hooks/use-user';
 import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
-  reps: z.coerce
-    .number({
-      required_error: 'Reps is required',
-    })
-    .positive()
-    .gt(1, {
-      message: 'Reps should be greater than 0.',
-    }),
-  sets: z.coerce
-    .number({
-      required_error: 'Set is required',
-    })
-    .positive()
-    .gt(1, {
-      message: 'Set should be greater than 0.',
-    }),
   dte: z.coerce.date({
     required_error: 'A date is required.',
   }),
+  title: z.string().min(1),
+  calories: z.coerce.number().gt(1),
+  time: z.enum(['breakfast', 'lunch', 'dinner'], {
+    required_error: 'You need to select a time for meal.',
+  }),
 });
 
-const ExerciseScheduleModal = () => {
-  const { isOpen, onClose, data } = useExerciseScheduleModal();
+const CustomDietModal = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { isOpen, onClose } = useCustomDiet();
   const { user } = useUser();
   const supabase = createClient();
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [weight, setWeight] = useState(0);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      reps: 1,
-      sets: 1,
+      title: '',
+      calories: 0,
     },
   });
-
-  useEffect(() => {
-    const fetchWeight = async () => {
-      const { data: antropometri, error } = await supabase
-        .from('antropemetri')
-        .select('weight')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (!error) {
-        setWeight(antropometri.weight);
-      }
-    };
-
-    fetchWeight();
-  }, [setWeight, user]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      const isUsingEquipment = data?.equipment !== 'body weight';
       const { error } = await supabase.from('schedules').insert({
         user_id: user?.id,
-        diet_type: 'exercise',
+        diet_type: 'diet',
         diet_schedules: {
-          ...data,
-          ...values,
+          id: nanoid(),
+          name: values.title,
+          calories: values.calories,
+          burned: 0,
+          imgUrl: '',
+          time: values.time,
           dte: new Date(values.dte.toUTCString()),
-          calories: 0,
-          burned: isUsingEquipment
-            ? ((3.5 * 3.5 * weight) / 200) *
-              (values.sets * values.reps * (2 + values.sets))
-            : 0.32 * (values.sets * values.reps * 2 + values.sets),
         },
       });
-
       if (error) throw error;
 
-      toast.success('Exercise ditambahkan ke jadwal!');
+      toast.success('Success! You can check your schedules');
       router.refresh();
+      form.reset();
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -122,53 +97,31 @@ const ExerciseScheduleModal = () => {
     }
   }
 
+  const currentDate = new Date();
+  const yesterday = new Date(
+    currentDate.setDate(currentDate.getDate() - 1)
+  ).toISOString();
+
   return (
     <Modal
-      title="Schedule"
-      description="Plan your diet and adjust the requirement"
+      title="Diet"
+      description="Add your desire food menu to your plan"
       isOpen={isOpen}
       onChange={onClose}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div>
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input disabled value={data?.name} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          </div>
-
-          <div className="flex items-center gap-x-4 justify-between">
             <FormField
+              name="title"
               control={form.control}
-              name="sets"
               render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Set</FormLabel>
+                <FormItem>
+                  <FormLabel>Nama makanan</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Set e.g 3" {...field} />
+                    <Input {...field} placeholder="e.g. Rendang" />
                   </FormControl>
-                  <FormDescription>
-                    Number of set for this exercise
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="reps"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Repetitions</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="Reps e.g 15" {...field} />
-                  </FormControl>
-                  <FormDescription>Repetitions for each set</FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -177,18 +130,60 @@ const ExerciseScheduleModal = () => {
 
           <div>
             <FormField
+              name="calories"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kalori</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} placeholder="e.g. 700" />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex flex-row items-center gap-x-4 justify-between">
+            <FormField
+              control={form.control}
+              name="time"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Time</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select the time for meal" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="breakfast">Breakfast</SelectItem>
+                      <SelectItem value="lunch">Lunch</SelectItem>
+                      <SelectItem value="dinner">Dinner</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
               control={form.control}
               name="dte"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date to exercise</FormLabel>
+                  <FormLabel>Date to eat</FormLabel>
                   <Popover>
-                    <PopoverTrigger className="w-full" asChild>
+                    <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant={'outline'}
                           className={cn(
-                            'w-full pl-3 text-left font-normal',
+                            'w-[240px] pl-3 text-left font-normal',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
@@ -218,7 +213,7 @@ const ExerciseScheduleModal = () => {
           </div>
 
           <Button disabled={isLoading} type="submit">
-            Add to plan
+            Add To Plan
           </Button>
         </form>
       </Form>
@@ -226,4 +221,4 @@ const ExerciseScheduleModal = () => {
   );
 };
 
-export default ExerciseScheduleModal;
+export default CustomDietModal;

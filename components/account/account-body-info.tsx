@@ -110,8 +110,8 @@ const AccountBodyInfo = () => {
           Ideal Weight
         </h2>
         <p className="mt-1 text-sm leading-6 dark:text-gray-400">
-          Is the average human weight for a person&apos;s age and gender, based
-          on their height and current fitness level.
+          <span className="font-bold">Note:</span> Reduce your daily calories
+          intake by 500cal make your weight loss success.
         </p>
       </div>
 
@@ -136,9 +136,9 @@ const AccountBodyInfo = () => {
           </div>
           <div className="flex gap-x-2 items-center w-full md:w-1/3">
             <h3 className="mt-1 text-sm font-medium leading-6 dark:text-gray-200 w-2/3">
-              Calorie Needs (kcal/day):
+              Bassal Metabolic Rate/day:
             </h3>
-            <Badge>{calorieNeeds}</Badge>
+            <Badge>{calorieNeeds}cal</Badge>
           </div>
         </div>
       ) : (

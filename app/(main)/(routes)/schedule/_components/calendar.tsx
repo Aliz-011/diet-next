@@ -10,10 +10,13 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
+import { Button } from '@/components/ui/button';
 
 import { useUser } from '@/hooks/use-user';
+import useCustomDiet from '@/hooks/use-custom-diet';
 import { useConfettiStore } from '@/hooks/use-confetti-store';
 import { createClient } from '@/utils/supabase/client';
+import useCustomExercise from '@/hooks/use-custom-exercise';
 
 type SchedulePlan = {
   id: string;
@@ -29,6 +32,8 @@ const Calendar = () => {
   const router = useRouter();
   const { user } = useUser();
   const confetti = useConfettiStore();
+  const customDiet = useCustomDiet();
+  const customExercise = useCustomExercise();
 
   useEffect(() => {
     const getPlans = async () => {
@@ -67,6 +72,10 @@ const Calendar = () => {
 
   return (
     <div className="my-5">
+      <div className="flex items-center gap-x-2 mb-4">
+        <Button onClick={customDiet.onOpen}>Tambah jadwal makanan</Button>
+        <Button onClick={customExercise.onOpen}>Tambah jadwal exercise</Button>
+      </div>
       <FullCalendar
         height="75vh"
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}

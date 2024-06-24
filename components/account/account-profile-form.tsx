@@ -76,7 +76,7 @@ const AccountProfileForm = () => {
   }
 
   return (
-    <section className="my-10 border p-6 rounded-lg">
+    <section className="mb-10 md:mb-10 border p-6 rounded-lg">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
           <div className="flex flex-col md:flex-row gap-x-8 w-full">

@@ -130,7 +130,9 @@ const FoodCard = ({ data }: { data: Food }) => {
           {data?.servings} {data?.servings > 1 ? 'servings' : 'serving'}
         </div>
         <div className="flex flex-row items-center gap-1">
-          <div className="font-semibold">${data?.pricePerServing}</div>
+          <div className="font-semibold">
+            {data?.nutrition.nutrients[0].amount}cal
+          </div>
         </div>
 
         <Button onClick={addToSchedule}>Add to Schedule</Button>

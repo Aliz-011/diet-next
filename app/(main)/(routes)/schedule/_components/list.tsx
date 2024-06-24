@@ -23,7 +23,7 @@ export const List = ({ data }: { data: DataProps[] | null }) => {
                   <Image
                     fill
                     className="object-cover h-full w-full group-hover:scale-110 transition"
-                    src={item.diet_schedules.imgUrl}
+                    src={item.diet_schedules.imgUrl || ''}
                     alt={item.diet_schedules.name}
                   />
                 )}
@@ -31,7 +31,7 @@ export const List = ({ data }: { data: DataProps[] | null }) => {
                   <Image
                     fill
                     className="object-cover h-full w-full group-hover:scale-110 transition"
-                    src={item.diet_schedules.gifUrl}
+                    src={item.diet_schedules.gifUrl || ''}
                     alt={item.diet_schedules.name}
                   />
                 )}
@@ -71,13 +71,15 @@ export const List = ({ data }: { data: DataProps[] | null }) => {
                     <div className="font-light">
                       For: {format(new Date(item.diet_schedules.dte), 'PP')}
                     </div>
-                    <Link
-                      href={item.diet_schedules.source}
-                      target="_blank"
-                      className="underline"
-                    >
-                      Recipe
-                    </Link>
+                    {!!item.diet_schedules.source && (
+                      <Link
+                        href={item.diet_schedules.source}
+                        target="_blank"
+                        className="underline"
+                      >
+                        Recipe
+                      </Link>
+                    )}
                   </>
                 )}
               </div>

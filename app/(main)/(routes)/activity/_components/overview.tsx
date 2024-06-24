@@ -25,7 +25,7 @@ export const Overview: React.FC<OverviewProps> = ({ data, param }) => {
         data={data}
         margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
       >
-        <XAxis dataKey="date" hide />
+        <XAxis dataKey="date" />
         <YAxis tickFormatter={(value) => `${value}${param}`} />
         <Tooltip content={<CustomTooltip />} />
         <Line

@@ -72,7 +72,7 @@ const PreviewModal = () => {
             <div className="mt-3 flex items-end justify-between">
               <p className=" text-gray-500 font-medium">
                 {data?.nutrition?.nutrients[0]?.amount!}
-                <span className="text-sm font-light">kcal</span>
+                <span className="text-sm font-light">cal</span>
               </p>
             </div>
             <hr className="my-4" />

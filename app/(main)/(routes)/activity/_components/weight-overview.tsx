@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { sub, isSameDay, format, type Duration } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
@@ -51,24 +51,32 @@ export const WeightOverview = () => {
     return new Date(value).toISOString();
   };
 
-  useEffect(() => {
-    const getGraph = async () => {
-      const { data: antropometri } = await supabase
+  const fetchGraphData = useCallback(async () => {
+    try {
+      const { data: antropometri, error } = await supabase
         .from('antropemetri')
         .select('id, weight, created_at')
         .eq('user_id', user?.id)
         .lte('created_at', formattedDate(date.to as Date))
-        .gte('created_at', formattedDate(date.from as Date));
+        .gte('created_at', formattedDate(date.from as Date))
+        .order('created_at', { ascending: true });
 
       const response = antropometri?.map((item) => ({
         date: format(new Date(item.created_at), 'dd-MM-yyyy'),
         weight: item.weight as number,
       })) as GraphData[];
       setData(response);
-    };
+      if (error) {
+        throw new Error(error.message);
+      }
+    } catch (error) {
+      console.error('Error fetching graph data:', error);
+    }
+  }, [date.from, date.to, setData, user?.id]);
 
-    getGraph();
-  }, [date.to, date.from, setData, user?.id]);
+  useEffect(() => {
+    fetchGraphData();
+  }, [fetchGraphData]);
 
   return (
     <Card className="col-span-full lg:col-span-4">

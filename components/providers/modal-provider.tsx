@@ -7,6 +7,8 @@ import PreviewModal from '@/components/modals/preview-modal';
 import ExerciseScheduleModal from '@/components/modals/exercise-schedule-modal';
 import DietScheduleModal from '@/components/modals/diet-schedule-modal';
 import SearchModal from '@/components/modals/search-modal';
+import CustomDietModal from '@/components/modals/custom-diet-modal';
+import CustomExerciseModal from '@/components/modals/custom-exercise-modal';
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -26,6 +28,8 @@ const ModalProvider = () => {
       <ExerciseScheduleModal />
       <DietScheduleModal />
       <SearchModal />
+      <CustomDietModal />
+      <CustomExerciseModal />
     </>
   );
 };
