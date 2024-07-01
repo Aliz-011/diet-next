@@ -133,7 +133,7 @@ const ExerciseScheduleModal = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div>
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Exercise</FormLabel>
               <FormControl>
                 <Input disabled value={data?.name} />
               </FormControl>
@@ -152,9 +152,7 @@ const ExerciseScheduleModal = () => {
                   <FormControl>
                     <Input type="number" placeholder="Set e.g 3" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Number of set for this exercise
-                  </FormDescription>
+                  <FormDescription>Jumlah set untuk exercise</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -164,11 +162,11 @@ const ExerciseScheduleModal = () => {
               name="reps"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>Repetitions</FormLabel>
+                  <FormLabel>Repetisi</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="Reps e.g 15" {...field} />
                   </FormControl>
-                  <FormDescription>Repetitions for each set</FormDescription>
+                  <FormDescription>Repetisi untuk setiap set</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -181,7 +179,7 @@ const ExerciseScheduleModal = () => {
               name="dte"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date to exercise</FormLabel>
+                  <FormLabel>Tanggal untuk exercise</FormLabel>
                   <Popover>
                     <PopoverTrigger className="w-full" asChild>
                       <FormControl>
@@ -195,7 +193,7 @@ const ExerciseScheduleModal = () => {
                           {field.value ? (
                             format(field.value, 'PPP')
                           ) : (
-                            <span>Pick a date</span>
+                            <span>Pilih tanggal</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -218,7 +216,7 @@ const ExerciseScheduleModal = () => {
           </div>
 
           <Button disabled={isLoading} type="submit">
-            Add to plan
+            Tambahkan ke jadwal
           </Button>
         </form>
       </Form>

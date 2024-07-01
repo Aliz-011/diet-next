@@ -10,13 +10,13 @@ import { createClient } from '@/utils/supabase/client';
 
 const getBmiCategory = (bmi: number) => {
   if (bmi < 19.9) {
-    return 'Underweight';
+    return 'Kurus';
   } else if (bmi >= 20 && bmi < 24.9) {
     return 'Normal';
   } else if (bmi >= 25 && bmi < 29.9) {
-    return 'Overweight';
+    return 'Gemuk';
   } else {
-    return 'Obese';
+    return 'Obesitas';
   }
 };
 
@@ -107,11 +107,12 @@ const AccountBodyInfo = () => {
     <section className="my-10 border p-6 rounded-lg">
       <div>
         <h2 className="text-base font-semibold leading-7 dark:text-gray-200">
-          Ideal Weight
+          Berat badan ideal
         </h2>
         <p className="mt-1 text-sm leading-6 dark:text-gray-400">
-          <span className="font-bold">Note:</span> Reduce your daily calories
-          intake by 500cal make your weight loss success.
+          <span className="font-bold">Note:</span> Kurangi kebutuhan kalori
+          harianmu sebanyak 500 cal untuk mengurangi berat badanmu sesuai
+          anjuran kesehatan
         </p>
       </div>
 
@@ -119,7 +120,7 @@ const AccountBodyInfo = () => {
         <div className="mt-4">
           <div className="flex gap-x-2 items-center w-full md:w-1/3">
             <h3 className="mt-1 text-sm font-medium leading-6 dark:text-gray-200 w-2/3">
-              Your ideal weight:
+              Berat badan idealmu:
             </h3>
             <div className="flex items-center justify-end md:w-full">
               <span className="text-sm">{weight}kg</span>
@@ -129,14 +130,14 @@ const AccountBodyInfo = () => {
           </div>
           <div className="flex gap-x-2 items-center w-full md:w-1/3">
             <h3 className="mt-1 text-sm font-medium leading-6 dark:text-gray-200 w-2/3">
-              Your BMI:
+              BMI:
             </h3>
             <Badge>{bmi}</Badge>{' '}
             <span className="font-medium text-sm">({bmiCategory})</span>
           </div>
           <div className="flex gap-x-2 items-center w-full md:w-1/3">
             <h3 className="mt-1 text-sm font-medium leading-6 dark:text-gray-200 w-2/3">
-              Bassal Metabolic Rate/day:
+              Kebutuhan kalori/hari:
             </h3>
             <Badge>{calorieNeeds}cal</Badge>
           </div>
@@ -146,7 +147,7 @@ const AccountBodyInfo = () => {
           <div className="inline-flex items-center justify-center w-full">
             <hr className="w-full h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
             <span className="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">
-              Fill your data first and your requirements will be shown here
+              Isikan form di atas terlebih dahulu.
             </span>
           </div>
         </div>

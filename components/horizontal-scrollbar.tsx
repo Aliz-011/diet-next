@@ -11,7 +11,7 @@ const HorizontalScrollbar = () => {
     <section className="pt-10 px-4 xl:px-0" id="muscle-groups">
       <Heading
         title="Muscle Groups"
-        subtitle="Search your exercise based on muscle group"
+        subtitle="Cari exercise berdasarkan otot grup"
       />
 
       <div className="flex w-full items-start gap-8 overflow-x-auto bg-background py-5 scrollbar-thin scrollbar-thumb-input scrollbar-track-rounded-full scrollbar-thumb-rounded-full">

@@ -27,14 +27,14 @@ const SectionTabs = async () => {
     <section className="space-y-2">
       <div id="section-tabs" className="px-4">
         <Heading
-          title="Foods & Exercises"
-          subtitle="Find your suitable food or exercises and add to your plan."
+          title="Makanan & Exercises"
+          subtitle="Cari makanan dan exercise yang sesuai dan tambahkan ke jadwalmu"
         />
       </div>
       <div className="mb-10">
         <Tabs defaultValue="foods">
           <TabsList className="mb-2 mx-4">
-            <TabsTrigger value="foods">Foods</TabsTrigger>
+            <TabsTrigger value="foods">Makanan</TabsTrigger>
             <TabsTrigger value="exercises">Exercises</TabsTrigger>
           </TabsList>
 

@@ -35,8 +35,8 @@ const SchedulePage = async () => {
         role="alert"
       >
         <span className="font-medium">
-          Click the name of the diet or exercise on the calendar to mark it as
-          `done`.
+          Klik nama makanan atau exercise di dalam kalendar kalau telah
+          menjalankannya.
         </span>{' '}
       </div>
       <Heading title="Calendar" subtitle="Full Calendar Interactive Page" />

@@ -2,7 +2,6 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import qs from 'query-string';
 
-import Ad from './_components/ad';
 import SectionTabs from './_components/section-tabs';
 import { SchedulesColumn, columns } from './_components/columns';
 import Heading from '@/components/heading';
@@ -10,7 +9,6 @@ import HorizontalScrollbar from '@/components/horizontal-scrollbar';
 import { DataTable } from '@/components/table/data-table';
 
 import { createClient } from '@/utils/supabase/server';
-import { getTodayIntakeCalories } from '@/actions/get-graph-activity';
 
 const SetupPage = async () => {
   const cookieStore = cookies();
@@ -66,7 +64,7 @@ const SetupPage = async () => {
         <div id="history">
           <Heading
             title="History"
-            subtitle="Your completed activity will be shown here"
+            subtitle="Diet dan exercise yang telah selesai."
           />
         </div>
 

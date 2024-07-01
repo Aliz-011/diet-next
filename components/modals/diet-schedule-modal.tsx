@@ -108,7 +108,7 @@ const DietScheduleModal = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div>
             <FormItem>
-              <FormLabel>Food&apos;s name</FormLabel>
+              <FormLabel>Makanan</FormLabel>
               <FormControl>
                 <Input disabled value={data?.title} />
               </FormControl>
@@ -123,7 +123,7 @@ const DietScheduleModal = () => {
               name="time"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>Time</FormLabel>
+                  <FormLabel>Waktu</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -148,7 +148,7 @@ const DietScheduleModal = () => {
               name="dte"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date to eat</FormLabel>
+                  <FormLabel>Tanggal untuk dimakan</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -185,7 +185,7 @@ const DietScheduleModal = () => {
           </div>
 
           <Button disabled={isLoading} type="submit">
-            Add To Plan
+            Tambahkan ke jadwal
           </Button>
         </form>
       </Form>

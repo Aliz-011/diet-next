@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -67,7 +66,7 @@ const AccountProfileForm = () => {
 
       if (error) throw error;
       router.push('/');
-      toast.success('Success updating your profile');
+      toast.success('Profil berhasil diupdated!');
     } catch (error) {
       toast.error('Something went wrong');
     } finally {
@@ -85,8 +84,8 @@ const AccountProfileForm = () => {
                 Profile
               </h2>
               <p className="mt-1 text-sm leading-6 dark:text-gray-400">
-                You have to fill this at least once, this will be used to
-                calculate the ideal weight, BMI, etc.
+                Silahkan isi form ini setidaknya sekali, ini akan digunakan
+                untuk menghitung berat ideal, BMI dan kebutuhan kalori.
               </p>
             </div>
 
@@ -97,7 +96,7 @@ const AccountProfileForm = () => {
                   name="fullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>Nama</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="e.g Alianz Andy"
@@ -105,9 +104,6 @@ const AccountProfileForm = () => {
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>
-                        This is your public display name.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -120,7 +116,7 @@ const AccountProfileForm = () => {
                   name="age"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Age</FormLabel>
+                      <FormLabel>Umur</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="e.g 17"
@@ -139,7 +135,7 @@ const AccountProfileForm = () => {
                   name="height"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Height (cm)</FormLabel>
+                      <FormLabel>Tinggi badan (cm)</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="e.g 170"
@@ -160,7 +156,7 @@ const AccountProfileForm = () => {
                   name="sex"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel>Sex</FormLabel>
+                      <FormLabel>Jenis kelamin</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
@@ -190,7 +186,7 @@ const AccountProfileForm = () => {
 
               <div className="mt-6 flex items-center justify-end gap-x-6 col-span-full">
                 <Button type="submit" disabled={isLoading}>
-                  Save Changes
+                  Simpan
                 </Button>
               </div>
             </div>

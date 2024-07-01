@@ -84,7 +84,7 @@ const AccountWeightForm = () => {
 
       if (error) throw error;
 
-      toast.success('Success! Sekarang kamu bisa memulai diet hari ini!');
+      toast.success('Kamu bisa memulai diet hari ini!');
       router.refresh();
       window.location.href = '/';
     } catch (error) {
@@ -109,7 +109,8 @@ const AccountWeightForm = () => {
                   Weight
                 </div>
                 <p className="text-sm leading-6">
-                  Update your weight every day to keep track your progress.
+                  Update berat badanmu setiap hari untuk memantau perkembangan
+                  dietmu.
                 </p>
               </div>
 
@@ -118,22 +119,26 @@ const AccountWeightForm = () => {
                 <ul>
                   <li className="font-medium text-sm leading-6">
                     Very light:{' '}
-                    <span className="font-normal">Little or no exercise</span>
+                    <span className="font-normal">
+                      Sedikit atau tidak exercise
+                    </span>
                   </li>
                   <li className="font-medium text-sm leading-6">
                     Light:{' '}
-                    <span className="font-normal">Exercise 1-3 times/week</span>
+                    <span className="font-normal">
+                      Exercise 1-3 kali/minggu
+                    </span>
                   </li>
                   <li className="font-medium text-sm leading-6">
                     Active:{' '}
                     <span className="font-normal">
-                      Daily exercise or 3-4 times/week
+                      Exercise harian atau 3-4 kali/minggu
                     </span>
                   </li>
                   <li className="font-medium text-sm leading-6">
                     Heavy:{' '}
                     <span className="font-normal">
-                      Intense daily exercise or physical job
+                      Intens exercise atau pekerjaan fisik
                     </span>
                   </li>
                 </ul>
@@ -147,7 +152,7 @@ const AccountWeightForm = () => {
                   name="weight"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Weight (kg)</FormLabel>
+                      <FormLabel>Berat badan (kg)</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="e.g 52"
@@ -167,7 +172,7 @@ const AccountWeightForm = () => {
                   name="activityLevel"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Intensity</FormLabel>
+                      <FormLabel>Intensitas</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -185,7 +190,7 @@ const AccountWeightForm = () => {
                         </SelectContent>
                       </Select>
                       <FormDescription>
-                        Intensity of your daily activity
+                        Intensitas aktivitas harianmu
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -195,7 +200,7 @@ const AccountWeightForm = () => {
 
               <div className=" flex items-center justify-end gap-x-6 col-span-full">
                 <Button type="submit" disabled={isLoading || disabled}>
-                  Save changes
+                  Simpan
                 </Button>
               </div>
             </div>

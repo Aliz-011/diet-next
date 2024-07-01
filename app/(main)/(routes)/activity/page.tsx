@@ -46,7 +46,7 @@ const ActivityPage = async () => {
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
             <CardDescription>
-              Here you can see the recent activities of your exercise and meals(
+              List makanan dan exercise yang telah kamu jalankan(
               {schedules?.length}).
             </CardDescription>
           </CardHeader>
