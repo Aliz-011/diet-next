@@ -46,6 +46,7 @@ export type Food = {
   lowFodmap: boolean;
   weightWatcherSmartPoints: number;
   gaps: string;
+  license?: string | undefined;
   preparationMinutes: number;
   cookingMinutes: number;
   aggregateLikes: number;
@@ -57,7 +58,7 @@ export type Food = {
   title: string;
   readyInMinutes: number;
   servings: number;
-  sourceURL: string;
+  sourceUrl: string;
   image: string;
   imageType: string;
   nutrition: Nutrition;
@@ -113,7 +114,7 @@ export type CaloricBreakdown = {
 export type Flavonoid = {
   name: string;
   amount: number;
-  unit: Unit;
+  unit: 'g' | 'IU' | 'kcal' | 'mg' | '%' | '' | 'µg';
   percentOfDailyNeeds?: number;
 };
 
@@ -136,5 +137,5 @@ export type Ingredient = {
 
 export type WeightPerServing = {
   amount: number;
-  unit: Unit;
+  unit: 'g' | 'mg';
 };
