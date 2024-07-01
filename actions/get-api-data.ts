@@ -65,3 +65,25 @@ export const getFoods = async ({
 
   return response.json();
 };
+
+export const getFoodsByName = async (name: string) => {
+  const apiKey1 = '78f8ff209181490091bfe386fd7ecdcf';
+  const apiKey2 = 'fcc15fe6c0cc417e9950f4efdef64adc';
+  const apiKey3 = '1e308c7f24d447df8d332a8a7eed3561';
+
+  const response = await fetch(
+    `https://api.spoonacular.com/recipes/complexSearch?apiKey=${apiKey2}&addRecipeNutrition=true&query=${name}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'force-cache',
+    }
+  );
+
+  if (!response.ok || response.status !== 200) {
+    throw new Error('Quota exceeded');
+  }
+
+  return response.json();
+};

@@ -1,6 +1,6 @@
 import Heading from '@/components/heading';
 
-import { getExercise, getFoods } from '@/actions/get-api-data';
+import { getExercise, getFoods, getFoodsByName } from '@/actions/get-api-data';
 import { SearchClient } from './_components/client';
 
 const SearchPage = async ({
@@ -18,19 +18,16 @@ const SearchPage = async ({
     maxCalories: string | undefined;
     maxSugar: string | undefined;
     name: string | undefined;
+    foodName: string | undefined;
   };
 }) => {
-  const { name: exerciseName, ...rest } = searchParams;
+  const { name: exerciseName, foodName, ...rest } = searchParams;
 
   let bodyContent = null;
 
-  if (
-    rest.minCalories !== undefined ||
-    rest.minProtein !== undefined ||
-    rest.minSugar !== undefined ||
-    rest.minCarbs !== undefined
-  ) {
-    const foods = await getFoods({ ...rest });
+  if (!!foodName) {
+    // const foods = await getFoods({ ...rest });
+    const foods = await getFoodsByName(foodName);
     bodyContent = (
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
         <SearchClient foods={foods.results} />

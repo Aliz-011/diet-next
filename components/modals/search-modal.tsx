@@ -23,6 +23,7 @@ const SearchModal = () => {
   const params = useSearchParams();
   const [dietKind, setDietKind] = useState<string | undefined>(undefined);
   const [exerciseName, setExerciseName] = useState('');
+  const [foodName, setFoodName] = useState('');
   const [minFat, setMinFat] = useState<string>('');
   const [maxFat, setMaxFat] = useState<string | undefined>(undefined);
   const [minCarbs, setMinCarbs] = useState<string>('');
@@ -72,19 +73,27 @@ const SearchModal = () => {
         maxCalories,
       };
 
-      const url = qs.stringifyUrl({
-        url: '/search',
-        query: updatedQuery,
-      });
+      const url = qs.stringifyUrl(
+        {
+          url: '/search',
+          query: {
+            foodName,
+          },
+        },
+        { skipEmptyString: true, skipNull: true }
+      );
 
       router.push(url);
     } else {
-      const url = qs.stringifyUrl({
-        url: '/search',
-        query: {
-          name: exerciseName,
+      const url = qs.stringifyUrl(
+        {
+          url: '/search',
+          query: {
+            name: exerciseName,
+          },
         },
-      });
+        { skipEmptyString: true, skipNull: true }
+      );
 
       router.push(url);
       setExerciseName('');
@@ -160,146 +169,158 @@ const SearchModal = () => {
   if (step === STEPS.INFO) {
     if (dietKind === 'food') {
       bodyContent = (
-        <div className="space-y-8 md:w-[920px]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minCarb">Min. carbs</Label>
-              <div className="space-y-2">
-                <Input
-                  value={minCarbs}
-                  onChange={(e) => setMinCarbs(e.target.value)}
-                  placeholder="e.g. 50"
-                />
-                <p className="text-xs text-muted-foreground">
-                  If empty or less than 10 the value going to be 10
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="maxCarbs">Max. carbs</Label>
-              <div className="space-y-2">
-                <Input
-                  value={maxCarbs}
-                  onChange={(e) => setMaxCarbs(e.target.value)}
-                  placeholder="e.g. 200"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minFat">Min. fat</Label>
-              <div className="space-y-2">
-                <Input
-                  value={minFat}
-                  onChange={(e) => setMinFat(e.target.value)}
-                  placeholder="e.g. 50"
-                />
-                <p className="text-xs text-muted-foreground">
-                  If empty or less than 10 the value going to be 10
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minFat">Max. fat</Label>
-              <div className="space-y-2">
-                <Input
-                  value={maxFat}
-                  onChange={(e) => setMaxFat(e.target.value)}
-                  placeholder="e.g. 100"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minCalories">Min. calories</Label>
-              <div className="space-y-2">
-                <Input
-                  value={minCalories}
-                  onChange={(e) => setMinCalories(e.target.value)}
-                  placeholder="e.g. 50"
-                />
-                <p className="text-xs text-muted-foreground">
-                  If empty or less than 10 the value going to be 10
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minCalories">Max. calories</Label>
-              <div className="space-y-2">
-                <Input
-                  value={maxCalories}
-                  onChange={(e) => setMaxCalories(e.target.value)}
-                  placeholder="e.g. 400"
-                />
-              </div>
-            </div>
-          </div>
+        <div className="flex flex-col gap-y-2 w-full">
+          <Label htmlFor="minProtein">Nama</Label>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minProtein">Min. protein</Label>
-              <div className="space-y-2">
-                <Input
-                  value={minProtein}
-                  onChange={(e) => setMinProtein(e.target.value)}
-                  placeholder="e.g. 50"
-                />
-                <p className="text-xs text-muted-foreground">
-                  If empty or less than 10 the value going to be 10
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minProtein">Max. protein</Label>
-              <div className="space-y-2">
-                <Input
-                  value={maxProtein}
-                  onChange={(e) => setMaxProtein(e.target.value)}
-                  placeholder="e.g. 80"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minSugar">Min. sugar</Label>
-              <div className="space-y-2">
-                <Input
-                  value={minSugar}
-                  onChange={(e) => setMinSugar(e.target.value)}
-                  placeholder="e.g. 50"
-                />
-                <p className="text-xs text-muted-foreground">
-                  If empty or less than 10 the value going to be 10
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col w-full gap-y-2">
-              <Label htmlFor="minSugar">Max. sugar</Label>
-              <div className="space-y-2">
-                <Input
-                  value={maxSugar}
-                  onChange={(e) => setMaxSugar(e.target.value)}
-                  placeholder="e.g. 90"
-                />
-              </div>
-            </div>
-          </div>
+          <Input
+            value={foodName}
+            onChange={(e) => setFoodName(e.target.value)}
+            placeholder="e.g. Pasta"
+          />
+          <p className="text-xs text-muted-foreground">Nama makanan</p>
         </div>
       );
+      // bodyContent = (
+      //   <div className="space-y-8 md:w-[920px]">
+      //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minCarb">Min. carbs</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={minCarbs}
+      //             onChange={(e) => setMinCarbs(e.target.value)}
+      //             placeholder="e.g. 50"
+      //           />
+      //           <p className="text-xs text-muted-foreground">
+      //             If empty or less than 10 the value going to be 10
+      //           </p>
+      //         </div>
+      //       </div>
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="maxCarbs">Max. carbs</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={maxCarbs}
+      //             onChange={(e) => setMaxCarbs(e.target.value)}
+      //             placeholder="e.g. 200"
+      //           />
+      //         </div>
+      //       </div>
+      //     </div>
+      //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minFat">Min. fat</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={minFat}
+      //             onChange={(e) => setMinFat(e.target.value)}
+      //             placeholder="e.g. 50"
+      //           />
+      //           <p className="text-xs text-muted-foreground">
+      //             If empty or less than 10 the value going to be 10
+      //           </p>
+      //         </div>
+      //       </div>
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minFat">Max. fat</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={maxFat}
+      //             onChange={(e) => setMaxFat(e.target.value)}
+      //             placeholder="e.g. 100"
+      //           />
+      //         </div>
+      //       </div>
+      //     </div>
+      //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minCalories">Min. calories</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={minCalories}
+      //             onChange={(e) => setMinCalories(e.target.value)}
+      //             placeholder="e.g. 50"
+      //           />
+      //           <p className="text-xs text-muted-foreground">
+      //             If empty or less than 10 the value going to be 10
+      //           </p>
+      //         </div>
+      //       </div>
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minCalories">Max. calories</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={maxCalories}
+      //             onChange={(e) => setMaxCalories(e.target.value)}
+      //             placeholder="e.g. 400"
+      //           />
+      //         </div>
+      //       </div>
+      //     </div>
+
+      //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minProtein">Min. protein</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={minProtein}
+      //             onChange={(e) => setMinProtein(e.target.value)}
+      //             placeholder="e.g. 50"
+      //           />
+      //           <p className="text-xs text-muted-foreground">
+      //             If empty or less than 10 the value going to be 10
+      //           </p>
+      //         </div>
+      //       </div>
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minProtein">Max. protein</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={maxProtein}
+      //             onChange={(e) => setMaxProtein(e.target.value)}
+      //             placeholder="e.g. 80"
+      //           />
+      //         </div>
+      //       </div>
+      //     </div>
+      //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minSugar">Min. sugar</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={minSugar}
+      //             onChange={(e) => setMinSugar(e.target.value)}
+      //             placeholder="e.g. 50"
+      //           />
+      //           <p className="text-xs text-muted-foreground">
+      //             If empty or less than 10 the value going to be 10
+      //           </p>
+      //         </div>
+      //       </div>
+      //       <div className="flex flex-col w-full gap-y-2">
+      //         <Label htmlFor="minSugar">Max. sugar</Label>
+      //         <div className="space-y-2">
+      //           <Input
+      //             value={maxSugar}
+      //             onChange={(e) => setMaxSugar(e.target.value)}
+      //             placeholder="e.g. 90"
+      //           />
+      //         </div>
+      //       </div>
+      //     </div>
+      //   </div>
+      // );
     } else {
       bodyContent = (
         <div className="flex flex-col gap-y-2 w-full">
-          <Label htmlFor="minProtein">Name</Label>
+          <Label htmlFor="minProtein">Nama</Label>
 
           <Input
             value={exerciseName}
             onChange={(e) => setExerciseName(e.target.value)}
             placeholder="e.g. Archer push up"
           />
-          <p className="text-xs text-muted-foreground">Name of the exercise</p>
+          <p className="text-xs text-muted-foreground">Nama exercise</p>
         </div>
       );
     }
